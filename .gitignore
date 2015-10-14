@@ -49,9 +49,9 @@ Temporary Items
 *.cache
 *.vshost.*
 *.force
-TemporaryGeneratedFile*.cs
-*.cs.dll
-
-bin/*
-obj/*
-
+*TemporaryGeneratedFile*.cs
+*.dll
+*.exe
+*.xml
+*/bin/*
+*/obj/*
