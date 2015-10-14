@@ -8,10 +8,10 @@ namespace ThinqCore
 {
 	public class Intersection
 	{
-		public List<int> CoFactors;
+		List<int> CoFactors;
 		int _max;
-		List<QuotientGroup> _multiples;
-		List<IEnumerable<int>> _enumerables;
+		//List<QuotientGroup> _multiples;
+		//List<IEnumerable<int>> _enumerables;
 
 		public IEnumerable<int> ResultSet;
 
@@ -22,8 +22,8 @@ namespace ThinqCore
 			if (factors == null || factors.Length < 1) { throw new ArgumentOutOfRangeException(paramName: "factors", message: "Parameter 'factors' must contain at least one element."); }
 
 			ResultSet = null;
-			_multiples = new List<QuotientGroup>();
-			_enumerables = new List<IEnumerable<int>>();
+			//_multiples = new List<QuotientGroup>();
+			//_enumerables = new List<IEnumerable<int>>();
 			_max = max;
 			CoFactors = new List<int>(factors);
 
@@ -37,8 +37,9 @@ namespace ThinqCore
 		{
 			QuotientGroup m = new QuotientGroup(coFactor, _max);
 			IEnumerable<int> e = m.GetNextQuotient().Where(i => i < _max);
-			_enumerables.Add(e);
-			_multiples.Add(m);
+
+			//_enumerables.Add(e);
+			//_multiples.Add(m);
 
 			if (ResultSet == null)
 			{
