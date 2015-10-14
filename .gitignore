@@ -41,3 +41,17 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+*.FileListAbsolute.txt
+*.suo
+*.pdb
+*.resources
+*.cache
+*.vshost.*
+*.force
+TemporaryGeneratedFile*.cs
+*.cs.dll
+
+bin/*
+obj/*
+
