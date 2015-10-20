@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ThinqGUI")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("GUI application")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hewlett-Packard")]
+[assembly: AssemblyCompany("csharpprogramming.tips")]
 [assembly: AssemblyProduct("ThinqGUI")]
-[assembly: AssemblyCopyright("Copyright © Hewlett-Packard 2015")]
+[assembly: AssemblyCopyright("Copyright © Adam Rakaska 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -40,6 +40,8 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.btnCoprimes = new System.Windows.Forms.Button();
 			this.listCoFactors = new System.Windows.Forms.ListBox();
+			this.contextMenuCoFactors = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.menuDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
@@ -49,10 +51,9 @@
 			this.tbCoPrimeMax = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
-			this.contextMenuCoFactors = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.menuDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupCoprime = new System.Windows.Forms.GroupBox();
 			this.groupFactors = new System.Windows.Forms.GroupBox();
+			this.backgroundWorkerEnumerate = new System.ComponentModel.BackgroundWorker();
 			this.panelOutput.SuspendLayout();
 			this.contextMenuCoFactors.SuspendLayout();
 			this.groupCoprime.SuspendLayout();
@@ -174,6 +175,20 @@
 			this.listCoFactors.Size = new System.Drawing.Size(60, 69);
 			this.listCoFactors.TabIndex = 14;
 			// 
+			// contextMenuCoFactors
+			// 
+			this.contextMenuCoFactors.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuDelete});
+			this.contextMenuCoFactors.Name = "contextMenuCoFactors";
+			this.contextMenuCoFactors.Size = new System.Drawing.Size(108, 26);
+			// 
+			// menuDelete
+			// 
+			this.menuDelete.Name = "menuDelete";
+			this.menuDelete.Size = new System.Drawing.Size(107, 22);
+			this.menuDelete.Text = "Delete";
+			this.menuDelete.Click += new System.EventHandler(this.menuDelete_Click);
+			// 
 			// label5
 			// 
 			this.label5.Font = new System.Drawing.Font("Arial Narrow", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -269,20 +284,6 @@
 			this.label6.Text = "/";
 			this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// contextMenuCoFactors
-			// 
-			this.contextMenuCoFactors.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuDelete});
-			this.contextMenuCoFactors.Name = "contextMenuCoFactors";
-			this.contextMenuCoFactors.Size = new System.Drawing.Size(108, 26);
-			// 
-			// menuDelete
-			// 
-			this.menuDelete.Name = "menuDelete";
-			this.menuDelete.Size = new System.Drawing.Size(107, 22);
-			this.menuDelete.Text = "Delete";
-			this.menuDelete.Click += new System.EventHandler(this.menuDelete_Click);
-			// 
 			// groupCoprime
 			// 
 			this.groupCoprime.Controls.Add(this.btnCoprimes);
@@ -318,6 +319,10 @@
 			this.groupFactors.TabIndex = 26;
 			this.groupFactors.TabStop = false;
 			this.groupFactors.Text = "Common Factors";
+			// 
+			// backgroundWorkerEnumerate
+			// 
+			this.backgroundWorkerEnumerate.WorkerSupportsCancellation = true;
 			// 
 			// MainForm
 			// 
@@ -367,6 +372,7 @@
 		private System.Windows.Forms.ToolStripMenuItem menuDelete;
 		private System.Windows.Forms.GroupBox groupCoprime;
 		private System.Windows.Forms.GroupBox groupFactors;
+		private System.ComponentModel.BackgroundWorker backgroundWorkerEnumerate;
 	}
 }
 

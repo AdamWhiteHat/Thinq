@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
+using System.Collections;
 using System.Windows.Forms;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
 using ThinqCore;
 
 namespace ThinqGUI
@@ -53,7 +54,7 @@ namespace ThinqGUI
 			}
 
 			tbOutput.Text = string.Join(Environment.NewLine,
-						string.Format("Coprimes: {0}", coprimes.Count),
+						string.Format("Co-primes: {0}", coprimes.Count),
 						joinedCoprimes
 					);			
 		}
@@ -65,29 +66,66 @@ namespace ThinqGUI
 			FindFactorsFromListBox();
 		}
 
+		private void SetControlsStatus(bool IsEnabled)
+		{
+			groupCoprime.Enabled = IsEnabled;
+			groupFactors.Enabled = IsEnabled;
+			btnEnumerate.Enabled = IsEnabled;
+		}
+
 		private void FindFactorsFromListBox()
 		{
 			if (CoFactors.Any(i => i < 1) || Max < 1)
 			{
 				return;
-			}
+			}			
 
-			intersectionSet = new Intersection(Max, CoFactors.ToArray());
+			backgroundWorkerEnumerate.DoWork += backgroundWorkerEnumerate_DoWork;
+			backgroundWorkerEnumerate.RunWorkerCompleted += backgroundWorkerEnumerate_RunWorkerCompleted;
 
-			DisplayFactorSet();
+			SetControlsStatus(false);
+
+			backgroundWorkerEnumerate.RunWorkerAsync();
 		}
 
-		private void DisplayFactorSet()
+		void backgroundWorkerEnumerate_DoWork(object sender, DoWorkEventArgs e)
+		{
+			backgroundWorkerEnumerate.DoWork -= backgroundWorkerEnumerate_DoWork;
+			DisplayArithmeticSequence();
+		}
+
+		void backgroundWorkerEnumerate_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			SetControlsStatus(true);
+		}
+
+		private void DisplayArithmeticSequence()
 		{
 			DateTime startTime = DateTime.Now;
+
+			intersectionSet = new Intersection(Max, CoFactors.ToArray());
 			List<int> factors = intersectionSet.Finalize().ToList();
+
 			TimeSpan timeSpent = DateTime.Now.Subtract(startTime);
 
-			tbOutput.Text = string.Join(Environment.NewLine,
+			if (tbOutput.InvokeRequired)
+			{
+				tbOutput.Invoke(new MethodInvoker(() =>
+					tbOutput.Text = string.Join(Environment.NewLine,
+							string.Format("Factors: {0}", factors.Count),
+							string.Format("Time elapsed: {0}", timeSpent.ToString(@"mm\:ss\.ff")),
+							string.Join(Environment.NewLine, factors)
+					)					
+				));
+			}
+			else
+			{
+				tbOutput.Text = string.Join(Environment.NewLine,
 					string.Format("Factors: {0}", factors.Count),
 					string.Format("Time elapsed: {0}", timeSpent.ToString(@"mm\:ss\.ff")),
 					string.Join(Environment.NewLine, factors)
 				);
+			}
 		}
 
 		private void btnAddCofactor_Click(object sender, EventArgs e)

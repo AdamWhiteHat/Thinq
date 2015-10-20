@@ -1,39 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace ThinqCore
 {
 	public class Intersection
 	{
-		List<int> CoFactors;
-		int _max;
+		int _maxValue;
+		List<int> _coFactors;
 		QuotientGroup _quotientGroup;
 
 		public IEnumerable<int> ResultSet;
 
 		private Intersection() { }
-		public Intersection(int max, params int[] factors)
+		public Intersection(int maxValue, params int[] sequenceRoots)
 		{
-			if (max < 1) { throw new ArgumentOutOfRangeException(paramName: "max", message: "Parameter 'max' cannot be less than 1."); }
-			if (factors == null || factors.Length < 1) { throw new ArgumentOutOfRangeException(paramName: "factors", message: "Parameter 'factors' must contain at least one element."); }
+			if (maxValue < 1) { throw new ArgumentOutOfRangeException(paramName: "max", message: "Parameter 'max' cannot be less than 1."); }
+			if (sequenceRoots == null || sequenceRoots.Length < 1) { throw new ArgumentOutOfRangeException(paramName: "factors", message: "Parameter 'factors' must contain at least one element."); }
 
 			ResultSet = null;
-			//_multiples = new List<Range>();
-			//_enumerables = new List<IEnumerable<int>>();
-			_max = max;
-			CoFactors = new List<int>(factors);
+			_maxValue = maxValue;
+			_coFactors = new List<int>(sequenceRoots);
 
-			_quotientGroup = new QuotientGroup(0, _max, CoFactors);
+			_quotientGroup = new QuotientGroup(0, _maxValue, _coFactors);
 
 			ResultSet = _quotientGroup.GetNext();
 		}
 
 		public IEnumerable<int> Finalize()
 		{
-			return ResultSet.TakeWhile<int>(i => i < _max);
+			return ResultSet.TakeWhile<int>(i => i < _maxValue);
 		}
 
 	} // END class
