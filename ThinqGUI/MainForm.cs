@@ -14,8 +14,7 @@ namespace ThinqGUI
 {
 	public partial class MainForm : Form
 	{
-		Intersection intersectionSet;		
-		//IEnumerator<int> enumeratorAandB; private int GetNext() { if (enumeratorAandB.MoveNext()) { return enumeratorAandB.Current; } else { return -1; } }
+		Intersection intersectionSet;
 
 		public int Max { get { return GetValue(tbMax); } }
 		List<int> CoFactors { get { return listCoFactors.Items.Cast<string>().Select(s => ParseString(s)).ToList(); } }
@@ -61,6 +60,8 @@ namespace ThinqGUI
 
 		private void btnEnumerate_Click(object sender, EventArgs e)
 		{
+			tbOutput.Text = string.Empty;
+			Console.Clear();
 			FindFactorsFromListBox();
 		}
 
@@ -72,7 +73,6 @@ namespace ThinqGUI
 			}
 
 			intersectionSet = new Intersection(Max, CoFactors.ToArray());
-			//enumeratorAandB = factorsOfAandB.GetEnumerator();
 
 			DisplayFactorSet();
 		}
@@ -80,7 +80,7 @@ namespace ThinqGUI
 		private void DisplayFactorSet()
 		{
 			DateTime startTime = DateTime.Now;
-			List<int> factors = intersectionSet.ResultSet.ToList();
+			List<int> factors = intersectionSet.Finalize().ToList();
 			TimeSpan timeSpent = DateTime.Now.Subtract(startTime);
 
 			tbOutput.Text = string.Join(Environment.NewLine,
@@ -88,8 +88,6 @@ namespace ThinqGUI
 					string.Format("Time elapsed: {0}", timeSpent.ToString(@"mm\:ss\.ff")),
 					string.Join(Environment.NewLine, factors)
 				);
-
-			//tbOutput.Text = string.Concat(GetNext(), Environment.NewLine, tbOutput.Text);
 		}
 
 		private void btnAddCofactor_Click(object sender, EventArgs e)
@@ -114,7 +112,6 @@ namespace ThinqGUI
 			{
 				listCoFactors.Items.Remove(item);
 			}
-			//FindFactorsFromListBox();
 		}
 
 	}
