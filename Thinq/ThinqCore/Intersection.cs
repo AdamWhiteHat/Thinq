@@ -10,8 +10,7 @@ namespace ThinqCore
 	{
 		List<int> CoFactors;
 		int _max;
-		//List<QuotientGroup> _multiples;
-		//List<IEnumerable<int>> _enumerables;
+		QuotientGroup _quotientGroup;
 
 		public IEnumerable<int> ResultSet;
 
@@ -22,33 +21,20 @@ namespace ThinqCore
 			if (factors == null || factors.Length < 1) { throw new ArgumentOutOfRangeException(paramName: "factors", message: "Parameter 'factors' must contain at least one element."); }
 
 			ResultSet = null;
-			//_multiples = new List<QuotientGroup>();
+			//_multiples = new List<Range>();
 			//_enumerables = new List<IEnumerable<int>>();
 			_max = max;
 			CoFactors = new List<int>(factors);
 
-			foreach (int factor in CoFactors)
-			{
-				AddCofactor(factor);
-			}
+			_quotientGroup = new QuotientGroup(0, _max, CoFactors);
+
+			ResultSet = _quotientGroup.GetNext();
 		}
 
-		public void AddCofactor(int coFactor)
+		public IEnumerable<int> Finalize()
 		{
-			QuotientGroup m = new QuotientGroup(coFactor, _max);
-			IEnumerable<int> e = m.GetNextQuotient().Where(i => i < _max);
-
-			//_enumerables.Add(e);
-			//_multiples.Add(m);
-
-			if (ResultSet == null)
-			{
-				ResultSet = e;
-			}
-			else
-			{
-				ResultSet = ResultSet.Intersect(e);
-			}
+			return ResultSet.TakeWhile<int>(i => i < _max);
 		}
+
 	} // END class
 }
