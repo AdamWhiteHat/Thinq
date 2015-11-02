@@ -45,18 +45,14 @@ namespace ThinqGUI
 			int coprimeMIN = GetValue(tbCoPrimeMin);
 			int coprimeMAX = GetValue(tbCoPrimeMax);
 
-			List<int> coprimes = Coprimes.FindCoprimes(coprimeTO, coprimeMIN, coprimeMAX);
-			string joinedCoprimes = "(Found no results)";
+			Coprimes coprimeFinder = new Coprimes(coprimeTO, coprimeMIN, coprimeMAX);
 
-			if (coprimes != null && coprimes.Count > 0)
-			{
-				joinedCoprimes = string.Join(Environment.NewLine, coprimes);
-			}
+			string joinedCoprimes = string.Join(Environment.NewLine, coprimeFinder.GetNext());		
 
 			tbOutput.Text = string.Join(Environment.NewLine,
-						string.Format("Co-primes: {0}", coprimes.Count),
+						string.Format("Co-primes found: {0}", joinedCoprimes.Count(c => c == '\n')+1),
 						joinedCoprimes
-					);			
+					);
 		}
 
 		private void btnEnumerate_Click(object sender, EventArgs e)

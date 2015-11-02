@@ -6,29 +6,45 @@ using System.Collections.Generic;
 
 namespace ThinqCore
 {
-	public static class Coprimes
+	public class Coprimes
 	{
-		public static List<int> FindCoprimes(int number, int min, int max)
-		{
-			if (max < 2 || min < 2 || max <= min || number < 1) { return null; }
+		public int Number { get; private set; }
+		public int Min { get; private set; }
+		public int Max { get; private set; }
+		
 
-			List<int> results = new List<int>();
-			for (int counter = min; counter < max; counter++)
+		private int counter;
+
+		public Coprimes(int number, int min, int max)
+		{
+			Number = number;
+			Min = min;
+			Max = max;
+
+			counter = Min;
+		}
+
+		public IEnumerable<int> GetNext()
+		{
+			if (Max < 2 || Min < 2 || Max <= Min || Number < 1) { yield break; }
+
+			while (counter < Max)
 			{
-				if (IsCoprime(number, counter))
+				if (IsCoprime(Number, counter))
 				{
-					results.Add(counter);
+					yield return counter;
 				}
+				counter++;
 			}
-			return results;
+			yield break;
 		}
 
 		public static bool IsCoprime(int value1, int value2)
 		{
-			return FindGCDModulus(value1, value2) == 1;
+			return FindGCD(value1, value2) == 1;
 		}
 
-		public static int FindGCDModulus(int value1, int value2)
+		public static int FindGCD(int value1, int value2)
 		{
 			while (value1 != 0 && value2 != 0)
 			{
