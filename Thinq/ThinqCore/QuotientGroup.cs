@@ -26,8 +26,8 @@ namespace ThinqCore
 		private ulong _counterDivisionOperations_PostYieldSkipped;
 		private ulong _counterDivisionOperations_TotalSkipped { get { return _counterDivisionOperations_PostYieldSkipped + _counterFirstLoop_Skipped; } }
 #endif
-
 		public bool IsDisposed { get; private set; }
+		public bool CancellationPending { get; internal set; }
 
 		public QuotientGroup(ulong minValue, ulong maxValue, List<ulong> coFactors)
 		{
@@ -41,6 +41,15 @@ namespace ThinqCore
 			_minValue = minValue;
 			_maxValue = maxValue;
 			_coFactors = coFactors;
+
+			_counterValue = 0;
+			_counterValuesReturned = 0;
+			#if DEBUG
+			_counterFirstLoop_Skipped = 0;
+			_counterFirstLoop_FailFast = 0;
+			_counterDivisionOperations_Performed = 0;
+			_counterDivisionOperations_PostYieldSkipped = 0;
+			#endif
 		}
 
 		public void Dispose()
@@ -61,9 +70,17 @@ namespace ThinqCore
 			}
 		}
 
+		public void CancelAsync()
+		{
+			if (!CancellationPending && !IsDisposed)
+			{
+				CancellationPending = true;
+			}
+		}
+
 		public IEnumerable<ulong> GetEnumerable()
 		{
-			if (!IsDisposed)
+			if (!IsDisposed && !CancellationPending)
 			{
 				_coFactors = _coFactors.Distinct().OrderBy(i => i).ToList();
 
@@ -91,6 +108,11 @@ namespace ThinqCore
 				_counterValue = _minValue;
 				_counterValuesReturned = 1;
 
+				while (_counterValue % smallestFactor != 0)
+				{
+					_counterValue += 1;
+				}
+
 #if DEBUG
 				_counterDivisionOperations_Performed = 1; // Metrics (Debug)
 				_counterDivisionOperations_PostYieldSkipped = 0;
@@ -105,21 +127,24 @@ namespace ThinqCore
 #if DEBUG
 					isFirstLoop = true;
 #endif
+					ulong lastFactorValue = 0;
 					isFactor = true;
 					foreach (ulong factor in otherFactors)
 					{
+						lastFactorValue = factor;
 						isFactor &= (_counterValue % factor == 0);
-
 #if DEBUG
 						isFirstLoop = false;
 						if (Settings.IsDebug()) { _counterDivisionOperations_Performed++; }
 #endif
-
+						if (CancellationPending)
+						{
+							break;
+						}
 						if (!isFactor)
 						{
 							break;
 						}
-
 					}
 
 #if DEBUG
@@ -128,11 +153,16 @@ namespace ThinqCore
 						_counterFirstLoop_FailFast++;
 						_counterFirstLoop_Skipped += (ulong)_coFactors.TakeWhile(i => _counterValue % i == 0).Count();
 					}
-					if (isFactor) { _counterDivisionOperations_PostYieldSkipped += postYieldSkip; }
-#endif
 
 					if (isFactor)
+					{ 
+						_counterDivisionOperations_PostYieldSkipped += postYieldSkip;
+					}
+#endif					
+					if (isFactor)
 					{
+						string assertEquation = string.Format("{0} % {1} == 0", _counterValue, lastFactorValue);
+
 						yield return _counterValue;
 						_counterValuesReturned++;
 						_counterValue += postYieldSkip;
@@ -140,6 +170,11 @@ namespace ThinqCore
 						{
 							break;
 						}
+					}
+
+					if (CancellationPending)
+					{
+						break;
 					}
 				}
 
@@ -154,8 +189,9 @@ namespace ThinqCore
 			[Conditional("DEBUG")]
 			public static void InitialMessage(ulong smallestFactor, ulong largestFactor, ulong smallestFactorQuotient, ulong postYieldSkip)
 			{
-				Console.WriteLine("Initializing GetNext()");
-				Console.WriteLine("smallestFactor/largestFactor (smallestFactorQuotient): {0:n0}/{1:n0} ({2:n0})", smallestFactor, largestFactor, smallestFactorQuotient);
+				Console.WriteLine("smallestFactor: {0:n0}",smallestFactor);
+				Console.WriteLine("largestFactor: {0:n0}",largestFactor);
+				Console.WriteLine("smallestFactorQuotient: {0:n0}", smallestFactorQuotient);
 				Console.WriteLine("postYieldSkip: {0:n0}", postYieldSkip);
 				Console.WriteLine();
 			}
@@ -163,6 +199,7 @@ namespace ThinqCore
 			[Conditional("DEBUG")]
 			public static void BreakMessage(QuotientGroup quotientGroup)
 			{
+				Console.WriteLine("-");
 				Console.ResetColor();
 				Console.Write("Value (max): {0:n0} ", quotientGroup._counterValue);
 				Console.ForegroundColor = ConsoleColor.DarkRed;
@@ -172,7 +209,7 @@ namespace ThinqCore
 				Console.ForegroundColor = ConsoleColor.DarkRed;
 				Console.WriteLine("({0:n0})", quotientGroup._maxReturnValues);
 				Console.ResetColor();
-				Console.WriteLine("--- Perf stats ---");
+				Console.WriteLine("-");
 				Console.ForegroundColor = ConsoleColor.DarkYellow;
 				#if DEBUG
 				Console.WriteLine("Divisions Performed: {0:n0}", quotientGroup._counterDivisionOperations_Performed);

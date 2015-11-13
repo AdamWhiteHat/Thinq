@@ -59,6 +59,10 @@ namespace ThinqGUI
 			if (IsBusy && !CancellationPending && !IsDisposed)
 			{
 				CancellationPending = true;
+				if (IntersectionSet != null)
+				{
+					IntersectionSet.CancelAsync();
+				}
 			}
 		}
 
@@ -93,7 +97,7 @@ namespace ThinqGUI
 		private void doWork(object sender, DoWorkEventArgs e)
 		{
 			this.DoWork -= doWork;
-			if (!CancellationPending && !IsDisposed)
+			if (IsBusy && !CancellationPending && !IsDisposed)
 			{
 				this.RunWorkerCompleted += runWorkerCompleted;				
 				calculateIntersectionSet();
@@ -104,7 +108,7 @@ namespace ThinqGUI
 		{
 			this.RunWorkerCompleted -= runWorkerCompleted;
 			Program.ThinqMainForm.SetControlsStatus(true);
-			if (CancellationPending == true)
+			if (CancellationPending)
 			{
 				Program.DisplayFunction("Task Canceled");
 			}
@@ -113,7 +117,7 @@ namespace ThinqGUI
 		
 		private void calculateIntersectionSet()
 		{
-			if (!IsDisposed)
+			if (!IsDisposed && !CancellationPending)
 			{
 				DateTime startTime = DateTime.Now;
 				ulong minValue = Program.ThinqMainForm.StartValue;
@@ -140,14 +144,15 @@ namespace ThinqGUI
 				{
 					ArithmeticSequenceStats.ProcessingTime = DateTime.Now.Subtract(startTime);
 
-					StringBuilder strBldr = new StringBuilder(Environment.NewLine);
+					StringBuilder strBldr = new StringBuilder();
+					strBldr.AppendLine("-------------------------------");
 					strBldr.AppendFormat("Max: {0:n0}", maxValue).AppendLine();
 					strBldr.AppendFormat("LCM[{0}]", string.Join(",", cofactors)); strBldr.AppendLine();
 					strBldr.AppendFormat("Factors found: {0}", ArithmeticSequenceStats.Counter); strBldr.AppendLine();
 					strBldr.AppendFormat("Time elapsed: {0}", ArithmeticSequenceStats.ProcessingTime.ToString(@"mm\:ss\.ff")); strBldr.AppendLine();
-					strBldr.AppendLine("-");
-					Program.DisplayFunction2(true, strBldr.ToString());
-					Program.DisplayFunction("-------------------------------");
+					strBldr.AppendLine();
+					strBldr.AppendLine();
+					Program.DisplayFunction(strBldr.ToString());
 				}
 			}
 		}

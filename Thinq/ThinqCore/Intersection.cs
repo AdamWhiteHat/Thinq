@@ -12,8 +12,9 @@ namespace ThinqCore
 		ulong _maxValue;
 		List<ulong> _coFactors;
 		QuotientGroup _quotientGroup;
-
+				
 		public bool IsDisposed { get; private set; }
+		public bool CancellationPending { get; internal set; }
 		public IEnumerable<ulong> ResultSet
 		{
 			get
@@ -54,9 +55,18 @@ namespace ThinqCore
 
 		}
 
+		public void CancelAsync()
+		{
+			if (!CancellationPending && !IsDisposed)
+			{
+				CancellationPending = true;
+				_quotientGroup.CancelAsync();
+			}
+		}
+
 		public IEnumerable<ulong> GetEnumerable()
 		{
-			return ResultSet.TakeWhile<ulong>(i => (i < _maxValue));
+			return ResultSet.TakeWhile<ulong>(i => (i < _maxValue) && !this.CancellationPending);
 		}
 
 	} // END class
