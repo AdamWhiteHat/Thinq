@@ -8,30 +8,34 @@ namespace ThinqCore
 {
 	public class Intersection
 	{
-		int _maxValue;
-		List<int> _coFactors;
+		ulong _minValue;
+		ulong _maxValue;
+		List<ulong> _coFactors;
 		QuotientGroup _quotientGroup;
 
-		public IEnumerable<int> ResultSet;
-
-		private Intersection() { }
-		public Intersection(int maxValue, params int[] sequenceRoots)
+		public IEnumerable<ulong> ResultSet 		
 		{
-			if (maxValue < 1) { throw new ArgumentOutOfRangeException(paramName: "max", message: "Parameter 'max' cannot be less than 1."); }
-			if (sequenceRoots == null || sequenceRoots.Length < 1) { throw new ArgumentOutOfRangeException(paramName: "factors", message: "Parameter 'factors' must contain at least one element."); }
+			get 
+			{
+				return _quotientGroup == null ? default(IEnumerable<ulong>) : _quotientGroup.GetEnumerable();
+			}
+		}
+		
+		public Intersection(ulong minValue, ulong maxValue, params ulong[] sequenceRoots)
+		{
+			if (maxValue < minValue) { throw new ArgumentOutOfRangeException(paramName: "maxValue", message: "Parameter 'maxValue' cannot be less than parameter 'minValue'."); }
+			if (sequenceRoots == null || sequenceRoots.Length < 1) { throw new ArgumentOutOfRangeException(paramName: "sequenceRoots", message: "Parameter 'sequenceRoots' must contain at least one element."); }
 
-			ResultSet = null;
+			_minValue = minValue;
 			_maxValue = maxValue;
-			_coFactors = new List<int>(sequenceRoots);
-
-			_quotientGroup = new QuotientGroup(0, _maxValue, _coFactors);
-
-			ResultSet = _quotientGroup.GetNext();
+			_coFactors = new List<ulong>(sequenceRoots);
+			_quotientGroup = new QuotientGroup(_minValue, _maxValue, _coFactors);
+			
 		}
 
-		public IEnumerable<int> Finalize()
+		public IEnumerable<ulong> GetEnumerable()
 		{
-			return ResultSet.TakeWhile<int>(i => i < _maxValue);
+			return ResultSet.TakeWhile<ulong>(i => (i < _maxValue) );
 		}
 
 	} // END class

@@ -24,7 +24,7 @@ namespace ThinqCore
 			counter = Min;
 		}
 
-		public IEnumerable<int> GetNext()
+		public IEnumerable<int> GetCoprimes()
 		{
 			if (Max < 2 || Min < 2 || Max <= Min || Number < 1) { yield break; }
 

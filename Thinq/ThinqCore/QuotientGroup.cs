@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,28 +10,24 @@ namespace ThinqCore
 {
 	public class QuotientGroup
 	{
-		private int _minValue;
-		private int _maxValue;
-		//private int _stepValue;
-		private int _counterValue;
-		private List<int> _coFactors;
+		private ulong _minValue;
+		private ulong _maxValue;
+		//private ulong _stepValue;
+		private ulong _counterValue;
+		private List<ulong> _coFactors;
+		private ulong _maxReturnValues = 1000000; // 1,000,000
+		private ulong _counterValuesReturned;
 
-		private int _maxReturnValues = 1000000; // 1,000,000
-		private int _counterValuesReturned;
+#if DEBUG
+		TimeSpan _processingTotalTime = TimeSpan.Zero; // Performance counter
+		private ulong _counterFirstLoop_Skipped;
+		private ulong _counterFirstLoop_FailFast;
+		private ulong _counterDivisionOperations_Performed;
+		private ulong _counterDivisionOperations_PostYieldSkipped;
+		private ulong _counterDivisionOperations_TotalSkipped { get { return _counterDivisionOperations_PostYieldSkipped + _counterFirstLoop_Skipped; } }
+#endif
 
-		// Performance counters
-		TimeSpan _processingTotalTime = TimeSpan.Zero;
-
-		private int _counterDivisionOperations_Performed;
-		private int _counterDivisionOperations_PostYieldSkipped;
-
-		private int _counterFirstLoop_FailFast;
-		private int _counterFirstLoop_Skipped;
-
-		private int _counterDivisionOperations_TotalSkipped { get { return _counterDivisionOperations_PostYieldSkipped + _counterFirstLoop_Skipped; } }
-
-
-		public QuotientGroup(int minValue, int maxValue, List<int> coFactors)
+		public QuotientGroup(ulong minValue, ulong maxValue, List<ulong> coFactors)
 		{
 			if (maxValue <= minValue) { throw new ArgumentOutOfRangeException("maxValue must be greater than minValue"); }
 			if (minValue > maxValue) { throw new ArgumentOutOfRangeException("maxValue minus minValue must be greater than or equal to stepValue"); }
@@ -40,28 +38,23 @@ namespace ThinqCore
 
 			_minValue = minValue;
 			_maxValue = maxValue;
-
-			_coFactors = coFactors.Distinct().OrderBy(i => i).ToList();
+			_coFactors = coFactors;
 		}
 
-		public IEnumerable<int> GetNext()
+		public IEnumerable<ulong> GetEnumerable()
 		{
-			DateTime startTime = DateTime.Now;
+			_coFactors = _coFactors.Distinct().OrderBy(i => i).ToList();
 
-			int smallestFactor = _coFactors.FirstOrDefault(); // Smallest value
+			ulong smallestFactor = _coFactors.FirstOrDefault(); // Smallest value
 			_coFactors.Remove(smallestFactor);
 
-			List<int> otherFactors = _coFactors.OrderByDescending(i => i).ToList();
-			int largestFactor = otherFactors.FirstOrDefault();
+			List<ulong> otherFactors = _coFactors.OrderByDescending(i => i).ToList();
+			ulong largestFactor = otherFactors.FirstOrDefault();
 
-			int postYieldSkip = 0;
-			int smallestFactorQuotient = largestFactor / smallestFactor;
+			ulong postYieldSkip = 0;
+			ulong smallestFactorQuotient = largestFactor / smallestFactor;
 			if (largestFactor % smallestFactor == 0)
 			{
-				if (Settings.IsDebug())
-				{
-					Console.WriteLine("Note: smallestFactor goes into largestFactor evenly!");
-				}
 				smallestFactorQuotient -= 1;
 			}
 
@@ -70,55 +63,51 @@ namespace ThinqCore
 				postYieldSkip = (smallestFactor * smallestFactorQuotient);
 			}
 
-			if (Settings.IsDebug())
-			{
-				Console.WriteLine("Initializing GetNext()");
-				Console.WriteLine("smallestFactor/largestFactor (smallestFactorQuotient): {0:n0}/{1:n0} ({2:n0})", smallestFactor, largestFactor, smallestFactorQuotient);
-				Console.WriteLine("postYieldSkip: {0:n0}", postYieldSkip);
-				Console.WriteLine();
-			}
+			Debug.InitialMessage(smallestFactor, largestFactor, smallestFactorQuotient, postYieldSkip);
 
 			bool isFactor = false;
 			_counterValue = _minValue;
 			_counterValuesReturned = 1;
-			_counterDivisionOperations_Performed = 1;
+
+#if DEBUG
+			_counterDivisionOperations_Performed = 1; // Metrics (Debug)
 			_counterDivisionOperations_PostYieldSkipped = 0;
 			_counterFirstLoop_FailFast = 0;
 			_counterFirstLoop_Skipped = 0;
+			bool isFirstLoop = true;
+#endif
 
 			while (_counterValue < _maxValue && _counterValuesReturned < _maxReturnValues)
 			{
 				_counterValue += smallestFactor;
-
+#if DEBUG
+				isFirstLoop = true;
+#endif
 				isFactor = true;
-				bool isFirstLoop = true;
-				foreach (int factor in otherFactors)
+				foreach (ulong factor in otherFactors)
 				{
 					isFactor &= (_counterValue % factor == 0);
 
+#if DEBUG
+					isFirstLoop = false;
 					if (Settings.IsDebug()) { _counterDivisionOperations_Performed++; }
+#endif
 
 					if (!isFactor)
 					{
 						break;
 					}
-					isFirstLoop = false;
+
 				}
 
-				if (Settings.IsDebug())
+#if DEBUG
+				if (isFirstLoop)
 				{
-					if (isFirstLoop)
-					{
-						_counterFirstLoop_FailFast++;
-
-						int operations = _coFactors.TakeWhile(i => _counterValue % i == 0).Count();
-						_counterFirstLoop_Skipped += operations;
-					}
-					if (isFactor)
-					{
-						_counterDivisionOperations_PostYieldSkipped += postYieldSkip;
-					}
+					_counterFirstLoop_FailFast++;
+					_counterFirstLoop_Skipped += (ulong)_coFactors.TakeWhile(i => _counterValue % i == 0).Count();
 				}
+				if (isFactor) { _counterDivisionOperations_PostYieldSkipped += postYieldSkip; }
+#endif
 
 				if (isFactor)
 				{
@@ -128,29 +117,46 @@ namespace ThinqCore
 				}
 			}
 
-			_processingTotalTime = DateTime.Now.Subtract(startTime);
-			string timeElapsed = string.Format("Total Time Elapsed: {0}", _processingTotalTime.ToString(@"mm\:ss\.ff"));
+			Debug.BreakMessage(this);
 
-			if (Settings.IsDebug())
+			yield break;
+		}
+
+		internal static class Debug
+		{
+			[Conditional("DEBUG")]
+			public static void InitialMessage(ulong smallestFactor, ulong largestFactor, ulong smallestFactorQuotient, ulong postYieldSkip)
 			{
+				Console.WriteLine("Initializing GetNext()");
+				Console.WriteLine("smallestFactor/largestFactor (smallestFactorQuotient): {0:n0}/{1:n0} ({2:n0})", smallestFactor, largestFactor, smallestFactorQuotient);
+				Console.WriteLine("postYieldSkip: {0:n0}", postYieldSkip);
+				Console.WriteLine();
+			}
+
+			[Conditional("DEBUG")]
+			public static void BreakMessage(QuotientGroup quotientGroup)
+			{
+				//DateTime startTime = DateTime.Now;
+				//_processingTotalTime = DateTime.Now.Subtract(startTime);
+				//string timeElapsed = string.Format("Total Time Elapsed: {0}", _processingTotalTime.ToString(@"mm\:ss\.ff"));
 				Console.ResetColor();
-				Console.Write("Value (max): {0:n0} ", _counterValue);
+				Console.Write("Value (max): {0:n0} ", quotientGroup._counterValue);
 				Console.ForegroundColor = ConsoleColor.DarkRed;
-				Console.WriteLine("({0:n0})", _maxValue);
+				Console.WriteLine("({0:n0})", quotientGroup._maxValue);
 				Console.ResetColor();
-				Console.Write("Iterations (max): {0:n0} ", _counterValuesReturned);
+				Console.Write("Iterations (max): {0:n0} ", quotientGroup._counterValuesReturned);
 				Console.ForegroundColor = ConsoleColor.DarkRed;
-				Console.WriteLine("({0:n0})", _maxReturnValues);
+				Console.WriteLine("({0:n0})", quotientGroup._maxReturnValues);
 				Console.ResetColor();
 				Console.WriteLine("--- Perf stats ---");
-				Console.ForegroundColor = ConsoleColor.DarkCyan;
-				Console.WriteLine(timeElapsed);
 				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				Console.WriteLine("Divisions Performed: {0:n0}", _counterDivisionOperations_Performed);
+				#if DEBUG
+				Console.WriteLine("Divisions Performed: {0:n0}", quotientGroup._counterDivisionOperations_Performed);
 				Console.ResetColor();
-				Console.WriteLine("FirstLoopFailFast (OperationsSaved): {0:n0} ({1:n0})", _counterFirstLoop_FailFast, _counterFirstLoop_Skipped);
+				Console.WriteLine("FirstLoopFailFast (OperationsSaved): {0:n0} ({1:n0})", quotientGroup._counterFirstLoop_FailFast, quotientGroup._counterFirstLoop_Skipped);
 				Console.ForegroundColor = ConsoleColor.Green;
-				Console.WriteLine("PostYieldSkipped + FirstLoopSkipped = TotalSkipped: {0:n0} + {1:n0} = {2:n0}", _counterDivisionOperations_PostYieldSkipped, _counterFirstLoop_Skipped, _counterDivisionOperations_TotalSkipped);
+				Console.WriteLine("PostYieldSkipped + FirstLoopSkipped = TotalSkipped: {0:n0} + {1:n0} = {2:n0}", quotientGroup._counterDivisionOperations_PostYieldSkipped, quotientGroup._counterFirstLoop_Skipped, quotientGroup._counterDivisionOperations_TotalSkipped);
+				#endif
 				Console.ResetColor();
 				Console.WriteLine();
 			}

@@ -15,39 +15,29 @@ namespace ThinqGUI
 {
 	public partial class MainForm : Form
 	{
-		Intersection intersectionSet;
+		// Factors
+		public ulong MultipleMax { get { return tbMax.ToUInt64(); } }
+		public List<ulong> CoFactors { get { return listCoFactors.Items.Cast<string>().Select(s => TryParse.UInt64(s)).ToList(); } }
 
-		public int Max { get { return GetValue(tbMax); } }
-		List<int> CoFactors { get { return listCoFactors.Items.Cast<string>().Select(s => ParseString(s)).ToList(); } }
-		
-		protected static string numeric = "0123456789";
+		// Co-primes
+		public int CoprimeOf { get { return  tbCoPrimeOf.ToInt32(); } }
+		public int CoprimeMin { get { return tbCoPrimeMin.ToInt32(); } }
+		public int CoprimeMax { get { return tbCoPrimeMax.ToInt32(); } }
+
+		private AsyncBackgroundTask backgroundTask;
 
 		public MainForm()
 		{
 			InitializeComponent();
-		}
-
-		protected static int ParseString(string text)
-		{
-			int result = -1;
-			string sanitized = new string(text.Where(c => numeric.Contains(c)).ToArray());
-			return int.TryParse(sanitized, out result) ? result : -1;
-		}
-
-		protected int GetValue(TextBox textBox)
-		{
-			return ParseString(textBox.Text);
+			backgroundTask = new AsyncBackgroundTask(this);
+			tbOutput.ShortcutsEnabled = true;
 		}
 
 		private void btnCoprimes_Click(object sender, EventArgs e)
 		{
-			int coprimeTO = GetValue(tbCoPrimeTo);
-			int coprimeMIN = GetValue(tbCoPrimeMin);
-			int coprimeMAX = GetValue(tbCoPrimeMax);
+			Coprimes coprimeFinder = new Coprimes(CoprimeOf, CoprimeMin, CoprimeMax);
 
-			Coprimes coprimeFinder = new Coprimes(coprimeTO, coprimeMIN, coprimeMAX);
-
-			string joinedCoprimes = string.Join(Environment.NewLine, coprimeFinder.GetNext());		
+			string joinedCoprimes = string.Join(Environment.NewLine, coprimeFinder.GetCoprimes());		
 
 			tbOutput.Text = string.Join(Environment.NewLine,
 						string.Format("Co-primes found: {0}", joinedCoprimes.Count(c => c == '\n')+1),
@@ -57,96 +47,90 @@ namespace ThinqGUI
 
 		private void btnEnumerate_Click(object sender, EventArgs e)
 		{
-			tbOutput.Text = string.Empty;
 			Console.Clear();
+			tbOutput.Text = string.Empty;
 			FindFactorsFromListBox();
 		}
 
-		private void SetControlsStatus(bool IsEnabled)
+		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			groupCoprime.Enabled = IsEnabled;
-			groupFactors.Enabled = IsEnabled;
-			btnEnumerate.Enabled = IsEnabled;
+			backgroundTask.CancelAsync();
+			btnCancel.Enabled = false;
+			backgroundTask.RunWorkerCompleted += new RunWorkerCompletedEventHandler((o, a) => btnCancel.Enabled = true);
 		}
-
+		
 		private void FindFactorsFromListBox()
 		{
-			if (CoFactors.Any(i => i < 1) || Max < 1)
+			if (CoFactors.Any(i => i < 1) || MultipleMax < 1)
 			{
 				return;
-			}			
-
-			backgroundWorkerEnumerate.DoWork += backgroundWorkerEnumerate_DoWork;
-			backgroundWorkerEnumerate.RunWorkerCompleted += backgroundWorkerEnumerate_RunWorkerCompleted;
+			}
 
 			SetControlsStatus(false);
-
-			backgroundWorkerEnumerate.RunWorkerAsync();
+			backgroundTask.RunWorkerAsync();
 		}
 
-		void backgroundWorkerEnumerate_DoWork(object sender, DoWorkEventArgs e)
+		public void SetControlsStatus(bool IsEnabled)
 		{
-			backgroundWorkerEnumerate.DoWork -= backgroundWorkerEnumerate_DoWork;
-			DisplayArithmeticSequence();
+			groupCoprime.Enabled = IsEnabled;
+			panelFactors.Enabled = IsEnabled;
+			btnEnumerate.Enabled = IsEnabled;
+			if (IsEnabled==false)
+			{				
+				btnCancel.Visible = true; //if (btnCancel.Enabled==false) { btnCancel.Enabled = true; }
+			}
 		}
 
-		void backgroundWorkerEnumerate_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		public void DisplayOutput(string format, params object[] args)
 		{
-			SetControlsStatus(true);
+			DisplayOutput(false, format, args);
 		}
 
-		private void DisplayArithmeticSequence()
+		public void DisplayOutput(bool onTop, string format, params object[] args)
 		{
-			DateTime startTime = DateTime.Now;
-
-			intersectionSet = new Intersection(Max, CoFactors.ToArray());
-			List<int> factors = intersectionSet.Finalize().ToList();
-
-			TimeSpan timeSpent = DateTime.Now.Subtract(startTime);
-
 			if (tbOutput.InvokeRequired)
-			{
-				tbOutput.Invoke(new MethodInvoker(() =>
-					tbOutput.Text = string.Join(Environment.NewLine,
-							string.Format("Factors: {0}", factors.Count),
-							string.Format("Time elapsed: {0}", timeSpent.ToString(@"mm\:ss\.ff")),
-							string.Join(Environment.NewLine, factors)
-					)					
-				));
+			{	
+				tbOutput.Invoke(new MethodInvoker(() => DisplayOutput(onTop, format, args)));	
 			}
 			else
 			{
-				tbOutput.Text = string.Join(Environment.NewLine,
-					string.Format("Factors: {0}", factors.Count),
-					string.Format("Time elapsed: {0}", timeSpent.ToString(@"mm\:ss\.ff")),
-					string.Join(Environment.NewLine, factors)
-				);
+				if (onTop)
+				{
+					tbOutput.Text = string.Concat(string.Format(format, args), Environment.NewLine, tbOutput.Text);
+				}
+				else
+				{
+					tbOutput.Text += string.Concat(string.Format(format, args), Environment.NewLine);
+					tbOutput.Select(tbOutput.TextLength, 0);
+					tbOutput.ScrollToCaret();
+				}
 			}
 		}
 
 		private void btnAddCofactor_Click(object sender, EventArgs e)
 		{
-			int newCofactor = GetValue(tbNewCofactor);
+			ulong newCofactor = tbAddCofactor.ToUInt64();
 			if (newCofactor > 0)
 			{
-				if (intersectionSet == null)
-				{
-				}
-				tbNewCofactor.Text = string.Empty;
-				listCoFactors.Items.Add(newCofactor.ToString());
-				FindFactorsFromListBox();
+				tbAddCofactor.Text = string.Empty;
+				listCoFactors.Items.Add(newCofactor.ToString()); //FindFactorsFromListBox();
 			}
 		}
 
 		private void menuDelete_Click(object sender, EventArgs e)
 		{
 			List<object> selectedItems = listCoFactors.SelectedItems.OfType<object>().ToList();
-
 			foreach(object item in selectedItems)
 			{
 				listCoFactors.Items.Remove(item);
 			}
 		}
 
+		private void btnTest_Click(object sender, EventArgs e)
+		{
+			string result = SerializableExpressionTree.GenerateMathExpressionTree();
+			result = "Result: " + result;
+			tbOutput.Text = result;
+		}
 	}
 }
