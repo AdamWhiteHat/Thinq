@@ -33,7 +33,6 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.btnEnumerate = new System.Windows.Forms.Button();
 			this.tbOutput = new System.Windows.Forms.TextBox();
 			this.panelOutput = new System.Windows.Forms.Panel();
 			this.tbCoPrimeOf = new System.Windows.Forms.TextBox();
@@ -59,7 +58,10 @@
 			this.btnTest = new System.Windows.Forms.Button();
 			this.groupFactors = new System.Windows.Forms.GroupBox();
 			this.btnCancel = new System.Windows.Forms.Button();
+			this.btnEnumerate = new System.Windows.Forms.Button();
 			this.panelFactors = new System.Windows.Forms.Panel();
+			this.tbMin = new System.Windows.Forms.TextBox();
+			this.label10 = new System.Windows.Forms.Label();
 			this.panelOutput.SuspendLayout();
 			this.contextMenuCoFactors.SuspendLayout();
 			this.groupCoprime.SuspendLayout();
@@ -67,27 +69,17 @@
 			this.panelFactors.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// btnEnumerate
-			// 
-			this.btnEnumerate.Location = new System.Drawing.Point(346, 34);
-			this.btnEnumerate.Name = "btnEnumerate";
-			this.btnEnumerate.Size = new System.Drawing.Size(75, 23);
-			this.btnEnumerate.TabIndex = 4;
-			this.btnEnumerate.Text = "Enumerate";
-			this.btnEnumerate.UseVisualStyleBackColor = true;
-			this.btnEnumerate.Click += new System.EventHandler(this.btnEnumerate_Click);
-			// 
 			// tbOutput
 			// 
 			this.tbOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbOutput.Location = new System.Drawing.Point(3, 3);
+			this.tbOutput.Location = new System.Drawing.Point(3, 4);
 			this.tbOutput.Margin = new System.Windows.Forms.Padding(4);
 			this.tbOutput.Multiline = true;
 			this.tbOutput.Name = "tbOutput";
 			this.tbOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbOutput.Size = new System.Drawing.Size(442, 185);
+			this.tbOutput.Size = new System.Drawing.Size(442, 184);
 			this.tbOutput.TabIndex = 0;
 			// 
 			// panelOutput
@@ -103,7 +95,7 @@
 			// 
 			// tbCoPrimeOf
 			// 
-			this.tbCoPrimeOf.Location = new System.Drawing.Point(19, 19);
+			this.tbCoPrimeOf.Location = new System.Drawing.Point(119, 20);
 			this.tbCoPrimeOf.Name = "tbCoPrimeOf";
 			this.tbCoPrimeOf.Size = new System.Drawing.Size(60, 20);
 			this.tbCoPrimeOf.TabIndex = 0;
@@ -112,7 +104,7 @@
 			// 
 			// tbCoPrimeMin
 			// 
-			this.tbCoPrimeMin.Location = new System.Drawing.Point(93, 19);
+			this.tbCoPrimeMin.Location = new System.Drawing.Point(193, 20);
 			this.tbCoPrimeMin.Name = "tbCoPrimeMin";
 			this.tbCoPrimeMin.Size = new System.Drawing.Size(60, 20);
 			this.tbCoPrimeMin.TabIndex = 1;
@@ -121,25 +113,25 @@
 			// 
 			// tbMax
 			// 
-			this.tbMax.Location = new System.Drawing.Point(251, 21);
+			this.tbMax.Location = new System.Drawing.Point(247, 41);
 			this.tbMax.Name = "tbMax";
-			this.tbMax.Size = new System.Drawing.Size(80, 20);
+			this.tbMax.Size = new System.Drawing.Size(89, 20);
 			this.tbMax.TabIndex = 3;
 			this.tbMax.Text = "1,000,000,000";
 			this.tbMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(251, 44);
+			this.label1.Location = new System.Drawing.Point(247, 63);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(80, 13);
+			this.label1.Size = new System.Drawing.Size(89, 13);
 			this.label1.TabIndex = 6;
-			this.label1.Text = "Max";
+			this.label1.Text = "Max value";
 			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(20, 41);
+			this.label3.Location = new System.Drawing.Point(120, 42);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(59, 13);
 			this.label3.TabIndex = 8;
@@ -148,7 +140,7 @@
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(85, 41);
+			this.label2.Location = new System.Drawing.Point(185, 42);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(105, 13);
 			this.label2.TabIndex = 9;
@@ -157,7 +149,7 @@
 			// 
 			// btnCoprimes
 			// 
-			this.btnCoprimes.Location = new System.Drawing.Point(245, 17);
+			this.btnCoprimes.Location = new System.Drawing.Point(348, 13);
 			this.btnCoprimes.Name = "btnCoprimes";
 			this.btnCoprimes.Size = new System.Drawing.Size(75, 23);
 			this.btnCoprimes.TabIndex = 3;
@@ -253,7 +245,7 @@
 			// 
 			this.label9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.label9.Font = new System.Drawing.Font("Arial Narrow", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label9.Location = new System.Drawing.Point(216, 3);
+			this.label9.Location = new System.Drawing.Point(214, 3);
 			this.label9.Margin = new System.Windows.Forms.Padding(0);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(32, 65);
@@ -263,7 +255,7 @@
 			// 
 			// tbCoPrimeMax
 			// 
-			this.tbCoPrimeMax.Location = new System.Drawing.Point(170, 19);
+			this.tbCoPrimeMax.Location = new System.Drawing.Point(270, 20);
 			this.tbCoPrimeMax.Name = "tbCoPrimeMax";
 			this.tbCoPrimeMax.Size = new System.Drawing.Size(60, 20);
 			this.tbCoPrimeMax.TabIndex = 2;
@@ -273,7 +265,7 @@
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(82, 23);
+			this.label4.Location = new System.Drawing.Point(182, 24);
 			this.label4.Margin = new System.Windows.Forms.Padding(0);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(10, 13);
@@ -284,7 +276,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(155, 23);
+			this.label6.Location = new System.Drawing.Point(255, 24);
 			this.label6.Margin = new System.Windows.Forms.Padding(0);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(12, 13);
@@ -303,16 +295,16 @@
 			this.groupCoprime.Controls.Add(this.label3);
 			this.groupCoprime.Controls.Add(this.tbCoPrimeMax);
 			this.groupCoprime.Controls.Add(this.label2);
-			this.groupCoprime.Location = new System.Drawing.Point(10, 7);
+			this.groupCoprime.Location = new System.Drawing.Point(10, 4);
 			this.groupCoprime.Name = "groupCoprime";
-			this.groupCoprime.Size = new System.Drawing.Size(332, 69);
+			this.groupCoprime.Size = new System.Drawing.Size(429, 67);
 			this.groupCoprime.TabIndex = 25;
 			this.groupCoprime.TabStop = false;
 			this.groupCoprime.Text = "Co-Prime";
 			// 
 			// btnTest
 			// 
-			this.btnTest.Location = new System.Drawing.Point(245, 41);
+			this.btnTest.Location = new System.Drawing.Point(348, 38);
 			this.btnTest.Name = "btnTest";
 			this.btnTest.Size = new System.Drawing.Size(75, 23);
 			this.btnTest.TabIndex = 4;
@@ -323,9 +315,9 @@
 			// groupFactors
 			// 
 			this.groupFactors.Controls.Add(this.btnCancel);
-			this.groupFactors.Controls.Add(this.panelFactors);
 			this.groupFactors.Controls.Add(this.btnEnumerate);
-			this.groupFactors.Location = new System.Drawing.Point(10, 82);
+			this.groupFactors.Controls.Add(this.panelFactors);
+			this.groupFactors.Location = new System.Drawing.Point(10, 77);
 			this.groupFactors.Name = "groupFactors";
 			this.groupFactors.Size = new System.Drawing.Size(429, 100);
 			this.groupFactors.TabIndex = 26;
@@ -334,18 +326,30 @@
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(346, 60);
+			this.btnCancel.Location = new System.Drawing.Point(348, 50);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 5;
+			this.btnCancel.TabIndex = 29;
 			this.btnCancel.Text = "&Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			this.btnCancel.Visible = false;
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
+			// btnEnumerate
+			// 
+			this.btnEnumerate.Location = new System.Drawing.Point(348, 25);
+			this.btnEnumerate.Name = "btnEnumerate";
+			this.btnEnumerate.Size = new System.Drawing.Size(75, 23);
+			this.btnEnumerate.TabIndex = 28;
+			this.btnEnumerate.Text = "Enumerate";
+			this.btnEnumerate.UseVisualStyleBackColor = true;
+			this.btnEnumerate.Click += new System.EventHandler(this.btnEnumerate_Click);
+			// 
 			// panelFactors
 			// 
 			this.panelFactors.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.panelFactors.Controls.Add(this.tbMin);
+			this.panelFactors.Controls.Add(this.label10);
 			this.panelFactors.Controls.Add(this.listCoFactors);
 			this.panelFactors.Controls.Add(this.label8);
 			this.panelFactors.Controls.Add(this.tbMax);
@@ -355,10 +359,28 @@
 			this.panelFactors.Controls.Add(this.label1);
 			this.panelFactors.Controls.Add(this.label5);
 			this.panelFactors.Controls.Add(this.tbAddCofactor);
-			this.panelFactors.Location = new System.Drawing.Point(6, 16);
+			this.panelFactors.Location = new System.Drawing.Point(5, 14);
 			this.panelFactors.Name = "panelFactors";
-			this.panelFactors.Size = new System.Drawing.Size(334, 75);
+			this.panelFactors.Size = new System.Drawing.Size(338, 80);
 			this.panelFactors.TabIndex = 27;
+			// 
+			// tbMin
+			// 
+			this.tbMin.Location = new System.Drawing.Point(247, 3);
+			this.tbMin.Name = "tbMin";
+			this.tbMin.Size = new System.Drawing.Size(89, 20);
+			this.tbMin.TabIndex = 21;
+			this.tbMin.Text = "1,000";
+			this.tbMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
+			// label10
+			// 
+			this.label10.Location = new System.Drawing.Point(247, 26);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(89, 13);
+			this.label10.TabIndex = 22;
+			this.label10.Text = "Start value";
+			this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// MainForm
 			// 
@@ -385,7 +407,6 @@
 
 		#endregion
 
-		private System.Windows.Forms.Button btnEnumerate;
 		private System.Windows.Forms.TextBox tbOutput;
 		private System.Windows.Forms.Panel panelOutput;
 		private System.Windows.Forms.TextBox tbCoPrimeOf;
@@ -410,8 +431,11 @@
 		private System.Windows.Forms.GroupBox groupCoprime;
 		private System.Windows.Forms.GroupBox groupFactors;
 		private System.Windows.Forms.Button btnTest;
-		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.Panel panelFactors;
+		private System.Windows.Forms.TextBox tbMin;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.Button btnCancel;
+		private System.Windows.Forms.Button btnEnumerate;
 	}
 }
 

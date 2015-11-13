@@ -16,6 +16,7 @@ namespace ThinqGUI
 	public partial class MainForm : Form
 	{
 		// Factors
+		public ulong StartValue { get { return tbMin.ToUInt64(); } }
 		public ulong MultipleMax { get { return tbMax.ToUInt64(); } }
 		public List<ulong> CoFactors { get { return listCoFactors.Items.Cast<string>().Select(s => TryParse.UInt64(s)).ToList(); } }
 

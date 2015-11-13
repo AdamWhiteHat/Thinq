@@ -116,7 +116,7 @@ namespace ThinqGUI
 			if (!IsDisposed)
 			{
 				DateTime startTime = DateTime.Now;
-				ulong minValue = 0;
+				ulong minValue = Program.ThinqMainForm.StartValue;
 				ulong maxValue = Program.ThinqMainForm.MultipleMax;
 				int padLen = maxValue.ToString().Length;
 				ulong[] cofactors = Program.ThinqMainForm.CoFactors.ToArray();
