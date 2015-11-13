@@ -15,6 +15,10 @@
 		{
 			if (disposing && (components != null))
 			{
+				if (backgroundTask != null)
+				{
+					backgroundTask.Dispose();
+				}
 				components.Dispose();
 			}
 			base.Dispose(disposing);

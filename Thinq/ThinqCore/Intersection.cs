@@ -6,21 +6,42 @@ using System.Collections.Generic;
 
 namespace ThinqCore
 {
-	public class Intersection
+	public class Intersection : IDisposable
 	{
 		ulong _minValue;
 		ulong _maxValue;
 		List<ulong> _coFactors;
 		QuotientGroup _quotientGroup;
 
-		public IEnumerable<ulong> ResultSet 		
+		public bool IsDisposed { get; private set; }
+		public IEnumerable<ulong> ResultSet
 		{
-			get 
+			get
 			{
 				return _quotientGroup == null ? default(IEnumerable<ulong>) : _quotientGroup.GetEnumerable();
 			}
 		}
-		
+
+		public void Dispose()
+		{
+			if (!IsDisposed)
+			{
+				IsDisposed = true;
+
+				if (_quotientGroup != null)
+				{
+					_quotientGroup.Dispose();
+					_quotientGroup = null;
+				}
+
+				if (_coFactors != null)
+				{
+					_coFactors.Clear();
+					_coFactors = null;
+				}
+			}
+		}
+
 		public Intersection(ulong minValue, ulong maxValue, params ulong[] sequenceRoots)
 		{
 			if (maxValue < minValue) { throw new ArgumentOutOfRangeException(paramName: "maxValue", message: "Parameter 'maxValue' cannot be less than parameter 'minValue'."); }
@@ -30,12 +51,12 @@ namespace ThinqCore
 			_maxValue = maxValue;
 			_coFactors = new List<ulong>(sequenceRoots);
 			_quotientGroup = new QuotientGroup(_minValue, _maxValue, _coFactors);
-			
+
 		}
 
 		public IEnumerable<ulong> GetEnumerable()
 		{
-			return ResultSet.TakeWhile<ulong>(i => (i < _maxValue) );
+			return ResultSet.TakeWhile<ulong>(i => (i < _maxValue));
 		}
 
 	} // END class

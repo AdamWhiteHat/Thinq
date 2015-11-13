@@ -28,8 +28,7 @@ namespace ThinqGUI
 
 		public MainForm()
 		{
-			InitializeComponent();
-			backgroundTask = new AsyncBackgroundTask(this);
+			InitializeComponent();			
 			tbOutput.ShortcutsEnabled = true;
 		}
 
@@ -56,7 +55,6 @@ namespace ThinqGUI
 		{
 			backgroundTask.CancelAsync();
 			btnCancel.Enabled = false;
-			backgroundTask.RunWorkerCompleted += new RunWorkerCompletedEventHandler((o, a) => btnCancel.Enabled = true);
 		}
 		
 		private void FindFactorsFromListBox()
@@ -66,8 +64,18 @@ namespace ThinqGUI
 				return;
 			}
 
-			SetControlsStatus(false);
-			backgroundTask.RunWorkerAsync();
+			if (backgroundTask != null)
+			{
+				backgroundTask.Dispose();
+				backgroundTask = null;
+			}
+
+			backgroundTask = new AsyncBackgroundTask(this);
+			if (backgroundTask != null)
+			{
+				SetControlsStatus(false);
+				backgroundTask.RunWorkerAsync();
+			}
 		}
 
 		public void SetControlsStatus(bool IsEnabled)
@@ -75,9 +83,16 @@ namespace ThinqGUI
 			groupCoprime.Enabled = IsEnabled;
 			panelFactors.Enabled = IsEnabled;
 			btnEnumerate.Enabled = IsEnabled;
-			if (IsEnabled==false)
-			{				
-				btnCancel.Visible = true; //if (btnCancel.Enabled==false) { btnCancel.Enabled = true; }
+			if (IsEnabled)
+			{
+				if (btnCancel.Enabled == false)
+				{ 
+					btnCancel.Enabled = true;
+				}
+			}
+			else
+			{
+				btnCancel.Visible = true; 
 			}
 		}
 
