@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoPrimes.cs" />
+    <Compile Include="ILinearRange.cs" />
     <Compile Include="Intersection.cs" />
     <Compile Include="QuotientGroup.cs" />
     <Compile Include="EnumerableRange.cs" />

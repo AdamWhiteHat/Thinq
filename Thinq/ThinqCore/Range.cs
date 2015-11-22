@@ -6,37 +6,96 @@ using System.Threading.Tasks;
 
 namespace ThinqCore
 {
-	public class Range
+	public class Range : ILinearRange
 	{
-		public static Range Empty = new Range(min: 0, max: 0);
-
-		private long _min;
-		private long _max;
-
-		public Range(long min, long max)
+		private Range()
 		{
-			if (min > max)
-			{
-				throw new ArgumentOutOfRangeException("min, max", "min cannot be greater than max");
-			}
-			_min = min;
-			_max = max;
 		}
 
-		//public Range(long ordinal, long count)
-		//{
-		//	_min = ordinal;
-		//	_max = ordinal + count;
-		//}
-		
-		public Range(long triCenter)
+		private long _min;
+		public long Min
 		{
-			if (triCenter < 0)
+			get { return _min; }
+			private set { _min = value; }
+		}
+
+		private long _max;
+		public long Max
+		{
+			get { return _max; }
+			private set { _max = value; }
+		}
+
+		public long Length
+		{
+			get { return _max - _min; }
+		}
+
+		public bool IsIn(ILinearRange range)
+		{			
+			if((range.Min >= this.Min) && (range.Max <= this.Max))
 			{
-				throw new ArgumentOutOfRangeException("triCenter", "absolute value cannot be negative.");
+				return true;
 			}
-			_min = triCenter - triCenter;
-			_max = triCenter + triCenter;
+			else
+			{
+				return false;
+			}
+		}
+
+		public bool IsIn(long value)
+		{
+			if ((value >= this.Min) && (value <= this.Max))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public static class Factory
+		{
+			public static Range MinMax(long min, long max)
+			{
+				if (min > max)
+				{
+					throw new ArgumentOutOfRangeException("min, max", "min cannot be greater than max");
+				}
+
+				Range result = new Range();
+
+				result.Min = min;
+				result.Max = max;
+
+				return result;
+			}
+
+			public static Range MinCount(long min, long count)
+			{
+				Range result = new Range();
+
+				result.Min = min;
+				result.Max = min + count;
+
+				return result;
+			}
+
+			public static Range OriginRadius(long origin, long radius)
+			{
+				if (radius < 0)
+				{
+					throw new ArgumentOutOfRangeException("triCenter", "absolute value cannot be negative.");
+				}
+
+				Range result = new Range();
+
+				result._min = origin - radius;
+				result._max = origin + radius;
+
+				return result;
+			}
 		}
 	}
 }
