@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ThinqCore
 {
-	interface ILinearRange
+	public interface ILinearRange
 	{
 		long Max { get; }
 		long Min { get; }

@@ -90,5 +90,19 @@ namespace ThinqCore
 			result &= this._incrementSize == other._incrementSize;
 			return result;
 		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				long a = this._minValue * 3;
+				long b = this._maxValue * 7;
+				long c = this._incrementSize * 17;
+				int result = (int)(a + b + c);
+				return result;
+			}
+		}
+
+
 	} // END class
 }
