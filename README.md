@@ -1,5 +1,8 @@
 # Thinq = Linq + Mathmatics
 
+![Screenshot](https://github.com/AdamRakaska/Thinq/blob/master/Thinq.PNG)
+
+
 Currently supports:
   - Finding the intersection of any number of arithmetic progression sequences, including infinite sets.
   - Ranges over the domain of whole numbers.
