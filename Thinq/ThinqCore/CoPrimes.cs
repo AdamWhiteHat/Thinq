@@ -59,5 +59,10 @@ namespace ThinqCore
 			}
 			return Math.Max(value1, value2);
 		}
+
+		public static int FindLCM(int num1, int num2)
+		{
+			return (num1 * num2) / FindGCD(num1, num2);
+		}
 	}
 }
