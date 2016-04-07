@@ -181,15 +181,16 @@ namespace ThinqGUI
 			if (!IsDisposed && !CancellationPending && _intersectionSet == null)
 			{
 				DateTime startTime = DateTime.Now;
-				ulong minValue = Program.ThinqMainForm.CoFactorMin;
-				ulong maxValue = Program.ThinqMainForm.CoFactorMax;
+				ulong minValue = Program.ThinqMainForm.ResultMinValue;
+				ulong maxValue = Program.ThinqMainForm.ResultMaxValue;
+				ulong maxQuantity = Program.ThinqMainForm.ResultMaxQuantity;
 				int padLen = maxValue.ToString().Length;
 				ulong[] cofactors = Program.ThinqMainForm.CoFactors.ToArray();
 
 				try
 				{
 					_operationStats.Counter = 0;
-					_intersectionSet = new Intersection(minValue, maxValue, cofactors);
+					_intersectionSet = new Intersection(minValue, maxValue, cofactors, maxQuantity);
 					foreach (ulong factor in _intersectionSet.GetEnumerable())
 					{
 						_operationStats.Counter++;

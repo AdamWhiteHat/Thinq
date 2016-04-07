@@ -10,19 +10,19 @@ namespace ThinqCore
 {
 	public class QuotientGroup : IDisposable
 	{
-		private ulong _minValue;
-		private ulong _maxValue;
+		private ulong _minReturnValue;
+		private ulong _maxReturnValue;
+		private ulong _maxReturnQuantity;
 		//private ulong _stepValue;
 		private ulong _counterValue;
-		private List<ulong> _coFactors;
-		private ulong _maxReturnValues = 1000000; // 1,000,000
+		private List<ulong> _coFactors;		
 		private ulong _counterValuesReturned;
 		private Debug debugMetrics;
 
 		public bool IsDisposed { get; private set; }
 		public bool CancellationPending { get; internal set; }
 
-		public QuotientGroup(ulong minValue, ulong maxValue, List<ulong> coFactors)
+		public QuotientGroup(ulong minValue, ulong maxValue, List<ulong> coFactors, ulong maxQuantity = 1000000)
 		{
 			if (maxValue <= minValue) { throw new ArgumentOutOfRangeException("maxValue must be greater than minValue"); }
 			if (minValue > maxValue) { throw new ArgumentOutOfRangeException("maxValue minus minValue must be greater than or equal to stepValue"); }
@@ -31,9 +31,10 @@ namespace ThinqCore
 			if (!coFactors.Any()) { throw new ArgumentOutOfRangeException("coFactors cannot be empty"); }
 			if (coFactors.Any(i => i == 0)) { throw new ArgumentOutOfRangeException("coFactors cannot contain a value of zero"); }
 
-			_minValue = minValue;
-			_maxValue = maxValue;
-			_coFactors = coFactors;
+			_minReturnValue = minValue;
+			_maxReturnValue = maxValue;
+			_maxReturnQuantity = maxQuantity;
+			_coFactors = coFactors;			
 
 			_counterValue = 0;
 			_counterValuesReturned = 0;
@@ -73,32 +74,36 @@ namespace ThinqCore
 		{
 			if (!IsDisposed && !CancellationPending)
 			{
+				// OrderBy value ascending
 				_coFactors = _coFactors.Distinct().OrderBy(i => i).ToList();
 
-				ulong smallestFactor = _coFactors.FirstOrDefault(); // Smallest value
+				// Get largest, smallest, quotient
+				ulong largestFactor = _coFactors.LastOrDefault(); // Largest value	
+				ulong smallestFactor = _coFactors.FirstOrDefault(); // Smallest value				
+				ulong smallestFactorQuotient = largestFactor / smallestFactor;
 				_coFactors.Remove(smallestFactor);
 
-				List<ulong> otherFactors = _coFactors.OrderByDescending(i => i).ToList();
-				ulong largestFactor = otherFactors.FirstOrDefault();
-
-				ulong postYieldSkip = 0;
-				ulong smallestFactorQuotient = largestFactor / smallestFactor;
+				// Roll quotient back by one (floor)
 				if (largestFactor % smallestFactor == 0)
 				{
 					smallestFactorQuotient -= 1;
 				}
 
+				// Number to skip after each return yield
+				ulong postYieldSkip = 0;
 				if (smallestFactorQuotient > 0)
 				{
 					postYieldSkip = (smallestFactor * smallestFactorQuotient);
 				}
 
+				// Record variables to console
 				Debug.InitialMessage(smallestFactor, largestFactor, smallestFactorQuotient, postYieldSkip);
 
 				bool isFactor = false;
-				_counterValue = _minValue;
+				_counterValue = _minReturnValue;
 				_counterValuesReturned = 1;
-
+				
+				// Set starting value, skip non-factors
 				while (_counterValue % smallestFactor != 0)
 				{
 					_counterValue += 1;
@@ -106,24 +111,27 @@ namespace ThinqCore
 
 				debugMetrics.Reset();
 
-				while (_counterValue < _maxValue && _counterValuesReturned < _maxReturnValues)
+				List<ulong> otherFactors = _coFactors.OrderByDescending(i => i).ToList();
+				while (_counterValue < _maxReturnValue && _counterValuesReturned < _maxReturnQuantity)
 				{
+					// Increment count by smallest factor
 					_counterValue += smallestFactor;
-					debugMetrics.NewLoop();
-					ulong lastFactorValue = 0;
-					isFactor = true;
+
+					debugMetrics.NewLoop(); // Signify new sub-loop to metrics ()
+					ulong lastFactorValue = 0; isFactor = true; // Reset loop variables
 					foreach (ulong factor in otherFactors)
 					{
-						lastFactorValue = factor;
-						isFactor &= (_counterValue % factor == 0);
+						lastFactorValue = factor; // Set last factor
+						isFactor &= (_counterValue % factor == 0); // Divide
 
+						// Metrics
 						debugMetrics.OnFirstDivisionOperation();
 
-						if (CancellationPending)
+						if (CancellationPending) // Cancel request
 						{
 							break;
 						}
-						if (!isFactor)
+						if (!isFactor) // Try different number if even one cofactor is not a factor
 						{
 							break;
 						}
@@ -136,11 +144,6 @@ namespace ThinqCore
 							debugMetrics._counterFirstLoop_FailFast++;
 							debugMetrics._counterFirstLoop_Skipped += (ulong)_coFactors.TakeWhile(i => _counterValue % i == 0).Count();
 						}
-
-						if (isFactor)
-						{
-							debugMetrics._counterDivisionOperations_PostYieldSkipped += postYieldSkip;
-						}
 					}
 
 					if (isFactor)
@@ -150,6 +153,10 @@ namespace ThinqCore
 						yield return _counterValue;
 						_counterValuesReturned++;
 						_counterValue += postYieldSkip;
+
+						if (Settings.IsDebugBuild)
+						{ debugMetrics._counterDivisionOperations_PostYieldSkipped += postYieldSkip; }
+
 						if (IsDisposed)
 						{
 							break;
@@ -235,11 +242,11 @@ namespace ThinqCore
 				Console.ResetColor();
 				Console.Write("Value (max): {0:n0} ", quotientGroup._counterValue);
 				Console.ForegroundColor = ConsoleColor.DarkRed;
-				Console.WriteLine("({0:n0})", quotientGroup._maxValue);
+				Console.WriteLine("({0:n0})", quotientGroup._maxReturnValue);
 				Console.ResetColor();
 				Console.Write("Iterations (max): {0:n0} ", quotientGroup._counterValuesReturned);
 				Console.ForegroundColor = ConsoleColor.DarkRed;
-				Console.WriteLine("({0:n0})", quotientGroup._maxReturnValues);
+				Console.WriteLine("({0:n0})", quotientGroup._maxReturnQuantity);
 				Console.ResetColor();
 				Console.WriteLine("-");
 				Console.ForegroundColor = ConsoleColor.DarkYellow;

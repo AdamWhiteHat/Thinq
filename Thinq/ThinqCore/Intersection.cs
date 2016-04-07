@@ -10,25 +10,27 @@ namespace ThinqCore
 		public bool CancellationPending { get; internal set; }
 		public IEnumerable<ulong> ResultSet { get { return _quotientGroup == null ? default(IEnumerable<ulong>) : _quotientGroup.GetEnumerable(); } }
 
-		private ulong _minValue;
-		private ulong _maxValue;
+		private ulong _minReturnValue;
+		private ulong _maxReturnValue;
+		private ulong _maxReturnQuantity;
 		private List<ulong> _coFactors;
 		private QuotientGroup _quotientGroup;
 
-		public Intersection(ulong minValue, ulong maxValue, params ulong[] sequenceRoots)
+		public Intersection(ulong minValue, ulong maxValue, IEnumerable<ulong> sequenceRoots, ulong maxQuantity = 1000000)
 		{
 			if (maxValue < minValue) { throw new ArgumentOutOfRangeException(paramName: "maxValue", message: "Parameter 'maxValue' cannot be less than parameter 'minValue'."); }
-			if (sequenceRoots == null || sequenceRoots.Length < 1) { throw new ArgumentOutOfRangeException(paramName: "sequenceRoots", message: "Parameter 'sequenceRoots' must contain at least one element."); }
+			if (sequenceRoots == null || sequenceRoots.Count() < 1) { throw new ArgumentOutOfRangeException(paramName: "sequenceRoots", message: "Parameter 'sequenceRoots' must contain at least one element."); }
 
-			_minValue = minValue;
-			_maxValue = maxValue;
+			_minReturnValue = minValue;
+			_maxReturnValue = maxValue;
+			_maxReturnQuantity = maxQuantity;
 			_coFactors = new List<ulong>(sequenceRoots);
-			_quotientGroup = new QuotientGroup(_minValue, _maxValue, _coFactors);
+			_quotientGroup = new QuotientGroup(_minReturnValue, _maxReturnValue, _coFactors, _maxReturnQuantity);
 		}
 
 		public IEnumerable<ulong> GetEnumerable()
 		{
-			return ResultSet.TakeWhile<ulong>(i => (i < _maxValue) && !this.CancellationPending);
+			return ResultSet.TakeWhile<ulong>(i => (i < _maxReturnValue) && !this.CancellationPending);
 		}
 
 		public void CancelAsync()
