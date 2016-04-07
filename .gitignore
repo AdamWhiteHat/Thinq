@@ -55,3 +55,8 @@ Temporary Items
 *.xml
 */bin/*
 */obj/*
+*.coverage
+*.vsp
+*.scgdat
+*.user
+*.orig
