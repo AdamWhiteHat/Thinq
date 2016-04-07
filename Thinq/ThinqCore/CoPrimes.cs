@@ -8,11 +8,11 @@ namespace ThinqCore
 {
 	public class Coprimes
 	{
+		public delegate int BinaryOperationDelegate(int value1, int value2);
 		public int Number { get; private set; }
 		public int Min { get; private set; }
 		public int Max { get; private set; }
 		
-
 		private int counter;
 
 		public Coprimes(int number, int min, int max)
@@ -42,6 +42,11 @@ namespace ThinqCore
 		public static bool IsCoprime(int value1, int value2)
 		{
 			return FindGCD(value1, value2) == 1;
+		}
+
+		public static int FindGCD(IEnumerable<int> numbers)
+		{
+			return numbers.Aggregate(FindGCD);
 		}
 
 		public static int FindGCD(int value1, int value2)
