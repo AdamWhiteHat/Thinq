@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using System.Collections;
 using System.Windows.Forms;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using ThinqCore;
@@ -15,59 +12,100 @@ namespace ThinqGUI
 {
 	public partial class MainForm : Form
 	{
-		// Factors
-		public ulong StartValue { get { return tbMin.ToUInt64(); } }
-		public ulong MultipleMax { get { return tbMax.ToUInt64(); } }
-		public List<ulong> CoFactors { get { return listCoFactors.Items.Cast<string>().Select(s => TryParse.UInt64(s)).ToList(); } }
+		public MainForm()
+		{
+			InitializeComponent();
+		}
 
-		// Co-primes
-		public int CoprimeOf { get { return  tbCoPrimeOf.ToInt32(); } }
+		public void SetControlsStatus(bool IsEnabled)
+		{
+			groupCoprime.Enabled = IsEnabled;
+			panelFactors.Enabled = IsEnabled;
+			btnEnumerateCoFactors.Enabled = IsEnabled;
+			if (IsEnabled)
+			{
+				if (btnCancelEnumerateCoFactors.Enabled == false)
+				{
+					btnCancelEnumerateCoFactors.Enabled = true;
+				}
+			}
+			else
+			{
+				btnCancelEnumerateCoFactors.Visible = true;
+			}
+		}
+
+		#region CoPrime Enumeration
+
+		public int CoprimeTo { get { return tbCoPrimeTo.ToInt32(); } }
 		public int CoprimeMin { get { return tbCoPrimeMin.ToInt32(); } }
 		public int CoprimeMax { get { return tbCoPrimeMax.ToInt32(); } }
 
-		private AsyncBackgroundTask backgroundTask;
-
-		public MainForm()
-		{
-			InitializeComponent();			
-			tbOutput.ShortcutsEnabled = true;
-		}
-
 		private void btnCoprimes_Click(object sender, EventArgs e)
 		{
-			Coprimes coprimeFinder = new Coprimes(CoprimeOf, CoprimeMin, CoprimeMax);
+			Coprimes coprimeFinder = new Coprimes(CoprimeTo, CoprimeMin, CoprimeMax);
+			List<int> coPrimes = coprimeFinder.GetCoprimes().ToList();
+			string joinedCoprimes = string.Join(Environment.NewLine, coPrimes);
 
-			string joinedCoprimes = string.Join(Environment.NewLine, coprimeFinder.GetCoprimes());		
+			StringBuilder resultString = new StringBuilder();
+			resultString.AppendFormat("Total # of co-primes found in range: {0}", coPrimes.Count);
+			resultString.AppendLine();
+			resultString.Append(joinedCoprimes);
 
-			tbOutput.Text = string.Join(Environment.NewLine,
-						string.Format("Co-primes found: {0}", joinedCoprimes.Count(c => c == '\n')+1),
-						joinedCoprimes
-					);
+			tbOutput.Clear();
+			DisplayOutput(resultString.ToString());
+			tbOutput.Select(0, 0);
+			tbOutput.ScrollToCaret();
 		}
 
-		private void btnEnumerate_Click(object sender, EventArgs e)
+		#endregion
+
+		#region CoFactor Enumeration
+
+		public ulong CoFactorMin { get { return tbCoFactorMin.ToUInt64(); } }
+		public ulong CoFactorMax { get { return tbCoFactorMax.ToUInt64(); } }
+		public List<ulong> CoFactors { get { return listCoFactors.Items.Cast<string>().Select(s => TryParse.UInt64(s)).ToList(); } }
+
+		private AsyncBackgroundTask backgroundTask = null;
+
+		private void btnEnumerateCoFactors_Click(object sender, EventArgs e)
 		{
 			Console.Clear();
-			tbOutput.Text = string.Empty;
-			FindFactorsFromListBox();
+			tbOutput.Clear();
+			EnumerateCoFactors();
 		}
 
-		private void btnCancel_Click(object sender, EventArgs e)
+		private void btnCancelEnumerateCoFactors_Click(object sender, EventArgs e)
 		{
-			backgroundTask.CancelAsync();
-			btnCancel.Enabled = false;
+			if (backgroundTask.CancelAsync())
+			{
+				btnCancelEnumerateCoFactors.Enabled = false;
+			}
 		}
-		
-		private void FindFactorsFromListBox()
+
+		private void EnumerateCoFactors()
 		{
-			if (CoFactors.Any(i => i < 1) || MultipleMax < 1)
+			if (CoFactors.Count < 1
+				|| CoFactors.Any(i => i < 2)
+				//|| CoFactors.Any(i => i < CoFactorMin)
+				|| CoFactors.Any(i => i > CoFactorMax)
+				|| CoFactorMin >= CoFactorMax
+				|| CoFactorMin < 2
+				|| CoFactorMax < 2)
 			{
 				return;
 			}
 
 			if (backgroundTask != null)
 			{
-				backgroundTask.Dispose();
+				if (!backgroundTask.IsDisposed)
+				{
+					if (backgroundTask.IsBusy)
+					{
+						return;
+					}
+					backgroundTask.Dispose();
+				}
 				backgroundTask = null;
 			}
 
@@ -79,74 +117,119 @@ namespace ThinqGUI
 			}
 		}
 
-		public void SetControlsStatus(bool IsEnabled)
+		private void btnAddCoFactor_Click(object sender, EventArgs e)
 		{
-			groupCoprime.Enabled = IsEnabled;
-			panelFactors.Enabled = IsEnabled;
-			btnEnumerate.Enabled = IsEnabled;
-			if (IsEnabled)
+			AddNewCoFactor();
+		}
+
+		private void tbCoFactorAdd_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (e.KeyData == Keys.Enter)
 			{
-				if (btnCancel.Enabled == false)
-				{ 
-					btnCancel.Enabled = true;
-				}
-			}
-			else
-			{
-				btnCancel.Visible = true; 
+				AddNewCoFactor();
 			}
 		}
+
+		private void listCoFactors_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Delete)
+			{
+				RemoveSelectedCoFactors();
+			}
+		}
+
+		private void listCoFactors_menuDelete_Click(object sender, EventArgs e)
+		{
+			RemoveSelectedCoFactors();
+		}
+
+		private void AddNewCoFactor()
+		{
+			ulong newCofactor = tbCoFactorAdd.ToUInt64();
+			if (newCofactor > 1 && !CoFactors.Contains(newCofactor))
+			{
+				tbCoFactorAdd.Text = string.Empty;
+				listCoFactors.Items.Add(newCofactor.ToString()); //FindFactorsFromListBox();
+				tbCoFactorAdd.Select(); // Put the cursor back in the TextBox to smooth experience for adding another number
+			}
+		}
+
+		private void RemoveSelectedCoFactors()
+		{
+			int lastIndex = -1;
+			List<object> selectedListItems = listCoFactors.SelectedItems.OfType<object>().ToList();
+			foreach (object item in selectedListItems)
+			{
+				lastIndex = listCoFactors.Items.IndexOf(item);
+				listCoFactors.Items.Remove(item);
+			}
+
+			// Limit lastIndex to within range
+			if (lastIndex > listCoFactors.Items.Count - 1)
+			{
+				lastIndex = listCoFactors.Items.Count - 1;
+			}
+
+			// Check for valid lastIndex
+			if (lastIndex > -1)
+			{
+				// Highlight next item after deleted item. This creates a smoother keyboard experience
+				listCoFactors.SetSelected(lastIndex, true);
+			}
+		}
+
+		#endregion
+
+		#region Output TextBox
 
 		public void DisplayOutput(string format, params object[] args)
 		{
-			DisplayOutput(false, format, args);
-		}
-
-		public void DisplayOutput(bool onTop, string format, params object[] args)
-		{
 			if (tbOutput.InvokeRequired)
-			{	
-				tbOutput.Invoke(new MethodInvoker(() => DisplayOutput(onTop, format, args)));	
+			{
+				tbOutput.Invoke(new MethodInvoker(() => DisplayOutput(format, args)));
 			}
 			else
 			{
-				if (onTop)
+				StringBuilder newText = new StringBuilder();
+				if (!string.IsNullOrEmpty(format))
 				{
-					tbOutput.Text = string.Concat(string.Format(format, args), Environment.NewLine, tbOutput.Text);
+					if (args == null || args.Length < 1)
+					{
+						newText.Append(format);
+					}
+					else
+					{
+						newText.AppendFormat(format, args);
+					}
 				}
-				else
+				newText.AppendLine(); //if (!newText.ToString().EndsWith(Environment.NewLine))
+				tbOutput.AppendText(newText.ToString());
+			}
+		}
+
+		private void tbOutput_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (e.Control)
+			{
+				if (e.KeyCode == Keys.A) // CTRL + A, Select all
 				{
-					tbOutput.Text += string.Concat(string.Format(format, args), Environment.NewLine);
-					tbOutput.Select(tbOutput.TextLength, 0);
-					tbOutput.ScrollToCaret();
+					tbOutput.SelectAll();
+				}
+				else if (e.KeyCode == Keys.S) // CTRL + S, Save as
+				{
+					using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+					{
+						if (saveFileDialog.ShowDialog() == DialogResult.OK)
+						{
+							string filename = saveFileDialog.FileName;
+							File.WriteAllLines(filename, tbOutput.Lines);
+						}
+					}
 				}
 			}
 		}
 
-		private void btnAddCofactor_Click(object sender, EventArgs e)
-		{
-			ulong newCofactor = tbAddCofactor.ToUInt64();
-			if (newCofactor > 0)
-			{
-				tbAddCofactor.Text = string.Empty;
-				listCoFactors.Items.Add(newCofactor.ToString()); //FindFactorsFromListBox();
-			}
-		}
+		#endregion
 
-		private void menuDelete_Click(object sender, EventArgs e)
-		{
-			List<object> selectedItems = listCoFactors.SelectedItems.OfType<object>().ToList();
-			foreach(object item in selectedItems)
-			{
-				listCoFactors.Items.Remove(item);
-			}
-		}
-
-		private void btnTest_Click(object sender, EventArgs e)
-		{
-			string result = SerializableExpressionTree.GenerateMathExpressionTree();
-			result = "Result: " + result;
-			tbOutput.Text = result;
-		}
 	}
 }

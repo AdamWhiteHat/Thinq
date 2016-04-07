@@ -35,13 +35,13 @@
 			this.components = new System.ComponentModel.Container();
 			this.tbOutput = new System.Windows.Forms.TextBox();
 			this.panelOutput = new System.Windows.Forms.Panel();
-			this.tbCoPrimeOf = new System.Windows.Forms.TextBox();
+			this.tbCoPrimeTo = new System.Windows.Forms.TextBox();
 			this.tbCoPrimeMin = new System.Windows.Forms.TextBox();
-			this.tbMax = new System.Windows.Forms.TextBox();
+			this.tbCoFactorMax = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.btnCoprimes = new System.Windows.Forms.Button();
+			this.btnEnumerateCoprimes = new System.Windows.Forms.Button();
 			this.listCoFactors = new System.Windows.Forms.ListBox();
 			this.contextMenuCoFactors = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.menuDelete = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,18 +49,17 @@
 			this.label7 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.btnAddCofactor = new System.Windows.Forms.Button();
-			this.tbAddCofactor = new System.Windows.Forms.TextBox();
+			this.tbCoFactorAdd = new System.Windows.Forms.TextBox();
 			this.label9 = new System.Windows.Forms.Label();
 			this.tbCoPrimeMax = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
 			this.groupCoprime = new System.Windows.Forms.GroupBox();
-			this.btnTest = new System.Windows.Forms.Button();
 			this.groupFactors = new System.Windows.Forms.GroupBox();
-			this.btnEnumerate = new System.Windows.Forms.Button();
-			this.btnCancel = new System.Windows.Forms.Button();
+			this.btnEnumerateCoFactors = new System.Windows.Forms.Button();
+			this.btnCancelEnumerateCoFactors = new System.Windows.Forms.Button();
 			this.panelFactors = new System.Windows.Forms.Panel();
-			this.tbMin = new System.Windows.Forms.TextBox();
+			this.tbCoFactorMin = new System.Windows.Forms.TextBox();
 			this.label10 = new System.Windows.Forms.Label();
 			this.panelOutput.SuspendLayout();
 			this.contextMenuCoFactors.SuspendLayout();
@@ -71,6 +70,8 @@
 			// 
 			// tbOutput
 			// 
+			this.tbOutput.AcceptsReturn = true;
+			this.tbOutput.AcceptsTab = true;
 			this.tbOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -81,6 +82,7 @@
 			this.tbOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.tbOutput.Size = new System.Drawing.Size(497, 189);
 			this.tbOutput.TabIndex = 0;
+			this.tbOutput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbOutput_KeyUp);
 			// 
 			// panelOutput
 			// 
@@ -93,32 +95,32 @@
 			this.panelOutput.Size = new System.Drawing.Size(503, 196);
 			this.panelOutput.TabIndex = 2;
 			// 
-			// tbCoPrimeOf
+			// tbCoPrimeTo
 			// 
-			this.tbCoPrimeOf.Location = new System.Drawing.Point(116, 16);
-			this.tbCoPrimeOf.Name = "tbCoPrimeOf";
-			this.tbCoPrimeOf.Size = new System.Drawing.Size(60, 20);
-			this.tbCoPrimeOf.TabIndex = 0;
-			this.tbCoPrimeOf.Text = "7";
-			this.tbCoPrimeOf.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbCoPrimeTo.Location = new System.Drawing.Point(159, 20);
+			this.tbCoPrimeTo.Name = "tbCoPrimeTo";
+			this.tbCoPrimeTo.Size = new System.Drawing.Size(60, 20);
+			this.tbCoPrimeTo.TabIndex = 0;
+			this.tbCoPrimeTo.Text = "7";
+			this.tbCoPrimeTo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// tbCoPrimeMin
 			// 
-			this.tbCoPrimeMin.Location = new System.Drawing.Point(190, 16);
+			this.tbCoPrimeMin.Location = new System.Drawing.Point(233, 20);
 			this.tbCoPrimeMin.Name = "tbCoPrimeMin";
 			this.tbCoPrimeMin.Size = new System.Drawing.Size(60, 20);
 			this.tbCoPrimeMin.TabIndex = 1;
 			this.tbCoPrimeMin.Text = "8";
 			this.tbCoPrimeMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
-			// tbMax
+			// tbCoFactorMax
 			// 
-			this.tbMax.Location = new System.Drawing.Point(247, 39);
-			this.tbMax.Name = "tbMax";
-			this.tbMax.Size = new System.Drawing.Size(149, 20);
-			this.tbMax.TabIndex = 3;
-			this.tbMax.Text = "100,000,000";
-			this.tbMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbCoFactorMax.Location = new System.Drawing.Point(247, 39);
+			this.tbCoFactorMax.Name = "tbCoFactorMax";
+			this.tbCoFactorMax.Size = new System.Drawing.Size(149, 20);
+			this.tbCoFactorMax.TabIndex = 3;
+			this.tbCoFactorMax.Text = "100,000,000";
+			this.tbCoFactorMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// label1
 			// 
@@ -131,7 +133,7 @@
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(117, 38);
+			this.label3.Location = new System.Drawing.Point(160, 42);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(59, 13);
 			this.label3.TabIndex = 8;
@@ -140,23 +142,23 @@
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(182, 38);
+			this.label2.Location = new System.Drawing.Point(233, 42);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(105, 13);
+			this.label2.Size = new System.Drawing.Size(137, 13);
 			this.label2.TabIndex = 9;
 			this.label2.Text = "Range (min / max)";
-			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// btnCoprimes
+			// btnEnumerateCoprimes
 			// 
-			this.btnCoprimes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCoprimes.Location = new System.Drawing.Point(411, 13);
-			this.btnCoprimes.Name = "btnCoprimes";
-			this.btnCoprimes.Size = new System.Drawing.Size(75, 23);
-			this.btnCoprimes.TabIndex = 3;
-			this.btnCoprimes.Text = "Co-Primes";
-			this.btnCoprimes.UseVisualStyleBackColor = true;
-			this.btnCoprimes.Click += new System.EventHandler(this.btnCoprimes_Click);
+			this.btnEnumerateCoprimes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnEnumerateCoprimes.Location = new System.Drawing.Point(393, 17);
+			this.btnEnumerateCoprimes.Name = "btnEnumerateCoprimes";
+			this.btnEnumerateCoprimes.Size = new System.Drawing.Size(97, 23);
+			this.btnEnumerateCoprimes.TabIndex = 3;
+			this.btnEnumerateCoprimes.Text = "List Co-Primes";
+			this.btnEnumerateCoprimes.UseVisualStyleBackColor = true;
+			this.btnEnumerateCoprimes.Click += new System.EventHandler(this.btnCoprimes_Click);
 			// 
 			// listCoFactors
 			// 
@@ -171,9 +173,10 @@
             "19"});
 			this.listCoFactors.Location = new System.Drawing.Point(63, 3);
 			this.listCoFactors.Name = "listCoFactors";
-			this.listCoFactors.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+			this.listCoFactors.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
 			this.listCoFactors.Size = new System.Drawing.Size(60, 69);
 			this.listCoFactors.TabIndex = 0;
+			this.listCoFactors.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listCoFactors_KeyUp);
 			// 
 			// contextMenuCoFactors
 			// 
@@ -187,7 +190,7 @@
 			this.menuDelete.Name = "menuDelete";
 			this.menuDelete.Size = new System.Drawing.Size(107, 22);
 			this.menuDelete.Text = "Delete";
-			this.menuDelete.Click += new System.EventHandler(this.menuDelete_Click);
+			this.menuDelete.Click += new System.EventHandler(this.listCoFactors_menuDelete_Click);
 			// 
 			// label5
 			// 
@@ -230,16 +233,17 @@
 			this.btnAddCofactor.TabIndex = 2;
 			this.btnAddCofactor.Text = "<-- Add";
 			this.btnAddCofactor.UseVisualStyleBackColor = true;
-			this.btnAddCofactor.Click += new System.EventHandler(this.btnAddCofactor_Click);
+			this.btnAddCofactor.Click += new System.EventHandler(this.btnAddCoFactor_Click);
 			// 
-			// tbAddCofactor
+			// tbCoFactorAdd
 			// 
-			this.tbAddCofactor.Location = new System.Drawing.Point(153, 11);
-			this.tbAddCofactor.Name = "tbAddCofactor";
-			this.tbAddCofactor.Size = new System.Drawing.Size(60, 20);
-			this.tbAddCofactor.TabIndex = 1;
-			this.tbAddCofactor.Text = "23";
-			this.tbAddCofactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbCoFactorAdd.Location = new System.Drawing.Point(153, 11);
+			this.tbCoFactorAdd.Name = "tbCoFactorAdd";
+			this.tbCoFactorAdd.Size = new System.Drawing.Size(60, 20);
+			this.tbCoFactorAdd.TabIndex = 1;
+			this.tbCoFactorAdd.Text = "23";
+			this.tbCoFactorAdd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbCoFactorAdd.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbCoFactorAdd_KeyUp);
 			// 
 			// label9
 			// 
@@ -255,7 +259,7 @@
 			// 
 			// tbCoPrimeMax
 			// 
-			this.tbCoPrimeMax.Location = new System.Drawing.Point(267, 16);
+			this.tbCoPrimeMax.Location = new System.Drawing.Point(310, 20);
 			this.tbCoPrimeMax.Name = "tbCoPrimeMax";
 			this.tbCoPrimeMax.Size = new System.Drawing.Size(60, 20);
 			this.tbCoPrimeMax.TabIndex = 2;
@@ -265,7 +269,7 @@
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(179, 20);
+			this.label4.Location = new System.Drawing.Point(222, 24);
 			this.label4.Margin = new System.Windows.Forms.Padding(0);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(10, 13);
@@ -276,7 +280,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(252, 20);
+			this.label6.Location = new System.Drawing.Point(295, 24);
 			this.label6.Margin = new System.Windows.Forms.Padding(0);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(12, 13);
@@ -286,9 +290,10 @@
 			// 
 			// groupCoprime
 			// 
-			this.groupCoprime.Controls.Add(this.btnTest);
-			this.groupCoprime.Controls.Add(this.btnCoprimes);
-			this.groupCoprime.Controls.Add(this.tbCoPrimeOf);
+			this.groupCoprime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupCoprime.Controls.Add(this.btnEnumerateCoprimes);
+			this.groupCoprime.Controls.Add(this.tbCoPrimeTo);
 			this.groupCoprime.Controls.Add(this.label6);
 			this.groupCoprime.Controls.Add(this.tbCoPrimeMin);
 			this.groupCoprime.Controls.Add(this.label4);
@@ -302,21 +307,12 @@
 			this.groupCoprime.TabStop = false;
 			this.groupCoprime.Text = "Co-Prime";
 			// 
-			// btnTest
-			// 
-			this.btnTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnTest.Location = new System.Drawing.Point(411, 38);
-			this.btnTest.Name = "btnTest";
-			this.btnTest.Size = new System.Drawing.Size(75, 23);
-			this.btnTest.TabIndex = 4;
-			this.btnTest.Text = "Test";
-			this.btnTest.UseVisualStyleBackColor = true;
-			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
-			// 
 			// groupFactors
 			// 
-			this.groupFactors.Controls.Add(this.btnEnumerate);
-			this.groupFactors.Controls.Add(this.btnCancel);
+			this.groupFactors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupFactors.Controls.Add(this.btnEnumerateCoFactors);
+			this.groupFactors.Controls.Add(this.btnCancelEnumerateCoFactors);
 			this.groupFactors.Controls.Add(this.panelFactors);
 			this.groupFactors.Location = new System.Drawing.Point(4, 77);
 			this.groupFactors.Name = "groupFactors";
@@ -325,57 +321,57 @@
 			this.groupFactors.TabStop = false;
 			this.groupFactors.Text = "Common Factors";
 			// 
-			// btnEnumerate
+			// btnEnumerateCoFactors
 			// 
-			this.btnEnumerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnEnumerate.Location = new System.Drawing.Point(411, 30);
-			this.btnEnumerate.Name = "btnEnumerate";
-			this.btnEnumerate.Size = new System.Drawing.Size(75, 23);
-			this.btnEnumerate.TabIndex = 30;
-			this.btnEnumerate.Text = "Enumerate";
-			this.btnEnumerate.UseVisualStyleBackColor = true;
-			this.btnEnumerate.Click += new System.EventHandler(this.btnEnumerate_Click);
+			this.btnEnumerateCoFactors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnEnumerateCoFactors.Location = new System.Drawing.Point(411, 30);
+			this.btnEnumerateCoFactors.Name = "btnEnumerateCoFactors";
+			this.btnEnumerateCoFactors.Size = new System.Drawing.Size(75, 23);
+			this.btnEnumerateCoFactors.TabIndex = 30;
+			this.btnEnumerateCoFactors.Text = "Enumerate";
+			this.btnEnumerateCoFactors.UseVisualStyleBackColor = true;
+			this.btnEnumerateCoFactors.Click += new System.EventHandler(this.btnEnumerateCoFactors_Click);
 			// 
-			// btnCancel
+			// btnCancelEnumerateCoFactors
 			// 
-			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCancel.Location = new System.Drawing.Point(411, 55);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 31;
-			this.btnCancel.Text = "&Cancel";
-			this.btnCancel.UseVisualStyleBackColor = true;
-			this.btnCancel.Visible = false;
-			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+			this.btnCancelEnumerateCoFactors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnCancelEnumerateCoFactors.Location = new System.Drawing.Point(411, 55);
+			this.btnCancelEnumerateCoFactors.Name = "btnCancelEnumerateCoFactors";
+			this.btnCancelEnumerateCoFactors.Size = new System.Drawing.Size(75, 23);
+			this.btnCancelEnumerateCoFactors.TabIndex = 31;
+			this.btnCancelEnumerateCoFactors.Text = "&Cancel";
+			this.btnCancelEnumerateCoFactors.UseVisualStyleBackColor = true;
+			this.btnCancelEnumerateCoFactors.Visible = false;
+			this.btnCancelEnumerateCoFactors.Click += new System.EventHandler(this.btnCancelEnumerateCoFactors_Click);
 			// 
 			// panelFactors
 			// 
 			this.panelFactors.AutoSize = true;
 			this.panelFactors.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.panelFactors.Controls.Add(this.tbMin);
+			this.panelFactors.Controls.Add(this.tbCoFactorMin);
 			this.panelFactors.Controls.Add(this.label10);
 			this.panelFactors.Controls.Add(this.listCoFactors);
 			this.panelFactors.Controls.Add(this.label8);
-			this.panelFactors.Controls.Add(this.tbMax);
+			this.panelFactors.Controls.Add(this.tbCoFactorMax);
 			this.panelFactors.Controls.Add(this.label7);
 			this.panelFactors.Controls.Add(this.label9);
 			this.panelFactors.Controls.Add(this.btnAddCofactor);
 			this.panelFactors.Controls.Add(this.label1);
 			this.panelFactors.Controls.Add(this.label5);
-			this.panelFactors.Controls.Add(this.tbAddCofactor);
+			this.panelFactors.Controls.Add(this.tbCoFactorAdd);
 			this.panelFactors.Location = new System.Drawing.Point(6, 19);
 			this.panelFactors.Name = "panelFactors";
 			this.panelFactors.Size = new System.Drawing.Size(399, 75);
 			this.panelFactors.TabIndex = 27;
 			// 
-			// tbMin
+			// tbCoFactorMin
 			// 
-			this.tbMin.Location = new System.Drawing.Point(247, 2);
-			this.tbMin.Name = "tbMin";
-			this.tbMin.Size = new System.Drawing.Size(149, 20);
-			this.tbMin.TabIndex = 21;
-			this.tbMin.Text = "100";
-			this.tbMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbCoFactorMin.Location = new System.Drawing.Point(247, 2);
+			this.tbCoFactorMin.Name = "tbCoFactorMin";
+			this.tbCoFactorMin.Size = new System.Drawing.Size(149, 20);
+			this.tbCoFactorMin.TabIndex = 21;
+			this.tbCoFactorMin.Text = "100";
+			this.tbCoFactorMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// label10
 			// 
@@ -414,19 +410,19 @@
 
 		private System.Windows.Forms.TextBox tbOutput;
 		private System.Windows.Forms.Panel panelOutput;
-		private System.Windows.Forms.TextBox tbCoPrimeOf;
+		private System.Windows.Forms.TextBox tbCoPrimeTo;
 		private System.Windows.Forms.TextBox tbCoPrimeMin;
-		private System.Windows.Forms.TextBox tbMax;
+		private System.Windows.Forms.TextBox tbCoFactorMax;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button btnCoprimes;
+		private System.Windows.Forms.Button btnEnumerateCoprimes;
 		private System.Windows.Forms.ListBox listCoFactors;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Button btnAddCofactor;
-		private System.Windows.Forms.TextBox tbAddCofactor;
+		private System.Windows.Forms.TextBox tbCoFactorAdd;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.TextBox tbCoPrimeMax;
 		private System.Windows.Forms.Label label4;
@@ -435,12 +431,11 @@
 		private System.Windows.Forms.ToolStripMenuItem menuDelete;
 		private System.Windows.Forms.GroupBox groupCoprime;
 		private System.Windows.Forms.GroupBox groupFactors;
-		private System.Windows.Forms.Button btnTest;
 		private System.Windows.Forms.Panel panelFactors;
-		private System.Windows.Forms.TextBox tbMin;
+		private System.Windows.Forms.TextBox tbCoFactorMin;
 		private System.Windows.Forms.Label label10;
-		private System.Windows.Forms.Button btnEnumerate;
-		private System.Windows.Forms.Button btnCancel;
+		private System.Windows.Forms.Button btnEnumerateCoFactors;
+		private System.Windows.Forms.Button btnCancelEnumerateCoFactors;
 	}
 }
 
