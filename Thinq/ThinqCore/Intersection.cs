@@ -1,47 +1,19 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace ThinqCore
 {
 	public class Intersection : IDisposable
 	{
-		ulong _minValue;
-		ulong _maxValue;
-		List<ulong> _coFactors;
-		QuotientGroup _quotientGroup;
-				
 		public bool IsDisposed { get; private set; }
 		public bool CancellationPending { get; internal set; }
-		public IEnumerable<ulong> ResultSet
-		{
-			get
-			{
-				return _quotientGroup == null ? default(IEnumerable<ulong>) : _quotientGroup.GetEnumerable();
-			}
-		}
+		public IEnumerable<ulong> ResultSet { get { return _quotientGroup == null ? default(IEnumerable<ulong>) : _quotientGroup.GetEnumerable(); } }
 
-		public void Dispose()
-		{
-			if (!IsDisposed)
-			{
-				IsDisposed = true;
-
-				if (_quotientGroup != null)
-				{
-					_quotientGroup.Dispose();
-					_quotientGroup = null;
-				}
-
-				if (_coFactors != null)
-				{
-					_coFactors.Clear();
-					_coFactors = null;
-				}
-			}
-		}
+		private ulong _minValue;
+		private ulong _maxValue;
+		private List<ulong> _coFactors;
+		private QuotientGroup _quotientGroup;
 
 		public Intersection(ulong minValue, ulong maxValue, params ulong[] sequenceRoots)
 		{
@@ -52,7 +24,11 @@ namespace ThinqCore
 			_maxValue = maxValue;
 			_coFactors = new List<ulong>(sequenceRoots);
 			_quotientGroup = new QuotientGroup(_minValue, _maxValue, _coFactors);
+		}
 
+		public IEnumerable<ulong> GetEnumerable()
+		{
+			return ResultSet.TakeWhile<ulong>(i => (i < _maxValue) && !this.CancellationPending);
 		}
 
 		public void CancelAsync()
@@ -64,9 +40,27 @@ namespace ThinqCore
 			}
 		}
 
-		public IEnumerable<ulong> GetEnumerable()
+		public void Dispose()
 		{
-			return ResultSet.TakeWhile<ulong>(i => (i < _maxValue) && !this.CancellationPending);
+			if (!IsDisposed)
+			{
+				IsDisposed = true;
+
+				if (_quotientGroup != null)
+				{
+					if (!_quotientGroup.IsDisposed)
+					{
+						_quotientGroup.Dispose();
+					}
+					_quotientGroup = null;
+				}
+
+				if (_coFactors != null)
+				{
+					_coFactors.Clear();
+					_coFactors = null;
+				}
+			}
 		}
 
 	} // END class
