@@ -40,7 +40,7 @@ namespace ThinqCore
 				_counterIterations++;
 			}
 									
-			if (Settings.IsDebug())
+			if (Settings.IsDebugBuild)
 			{
 				Console.WriteLine("Factor: {0}", _incrementSize);
 				Console.WriteLine("\tcounterValue (max): {0:n0} ({1:n0})", _counterValue, _maxValue);
