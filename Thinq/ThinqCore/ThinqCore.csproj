@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ThinqCore</RootNamespace>
     <AssemblyName>ThinqCore</AssemblyName>
-    <TargetFrameworkVersion>v4.5.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoPrimes.cs" />
+    <Compile Include="ExpressionProxy.cs" />
     <Compile Include="ILinearRange.cs" />
     <Compile Include="Intersection.cs" />
     <Compile Include="QuotientGroup.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="SegmentedArray.cs" />
     <Compile Include="SerializableExpressionTree.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="WeakValueSource.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
