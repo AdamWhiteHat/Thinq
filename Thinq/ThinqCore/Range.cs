@@ -32,7 +32,7 @@ namespace ThinqCore
 		}
 
 		public bool IsIn(ILinearRange range)
-		{			
+		{
 			if((range.Min >= this.Min) && (range.Max <= this.Max))
 			{
 				return true;
@@ -55,6 +55,11 @@ namespace ThinqCore
 			}
 		}
 
+		public override string ToString()
+		{
+			return string.Format("Range[{0} -> {1}]", Min, Max);
+		}
+
 		public static class Factory
 		{
 			public static Range MinMax(long min, long max)
@@ -72,12 +77,12 @@ namespace ThinqCore
 				return result;
 			}
 
-			public static Range MinCount(long min, long count)
+			public static Range StartCount(long start, long count)
 			{
 				Range result = new Range();
 
-				result.Min = min;
-				result.Max = min + count;
+				result.Min = start;
+				result.Max = start + count;
 
 				return result;
 			}
@@ -91,8 +96,8 @@ namespace ThinqCore
 
 				Range result = new Range();
 
-				result._min = origin - radius;
-				result._max = origin + radius;
+				result.Min = origin - radius;
+				result.Max = origin + radius;
 
 				return result;
 			}
