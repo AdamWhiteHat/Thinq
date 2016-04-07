@@ -10,10 +10,7 @@ namespace ThinqGUI
 	{
 		internal static MainForm ThinqMainForm;
 		internal static DisplayOutputDelegate DisplayFunction;
-		internal static DisplayOutputDelegate2 DisplayFunction2;
-
 		internal delegate void DisplayOutputDelegate(string format, params object[] args);
-		internal delegate void DisplayOutputDelegate2(bool onTop, string format, params object[] args);
 
 		static Program()
 		{
@@ -21,7 +18,6 @@ namespace ThinqGUI
 			Application.SetCompatibleTextRenderingDefault(false);
 			ThinqMainForm = new MainForm();
 			DisplayFunction = ThinqMainForm.DisplayOutput;
-			DisplayFunction2 = ThinqMainForm.DisplayOutput;
 		}
 
 		/// <summary>
