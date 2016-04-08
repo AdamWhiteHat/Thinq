@@ -49,6 +49,11 @@ namespace ThinqCore
 			return numbers.Aggregate(FindGCD);
 		}
 
+		public static int FindLCM(IEnumerable<int> numbers)
+		{
+			return numbers.Aggregate(FindLCM);
+		}
+
 		public static int FindGCD(int value1, int value2)
 		{
 			while (value1 != 0 && value2 != 0)

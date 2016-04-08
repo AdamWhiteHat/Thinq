@@ -235,15 +235,17 @@ namespace ThinqGUI
 		private void btnEnumerateGCD_Click(object sender, EventArgs e)
 		{
 			IEnumerable<int> numbers = CoFactors.Select(l => (int)l);
-			DisplayOutput("FindGCD[{0}]:", string.Join(", ", numbers));
+			DisplayOutput("GCD[{0}]:", string.Join(", ", numbers));
 			DisplayOutput("{0}", Coprimes.FindGCD(numbers));
-			DisplayOutput("");
-			//ApplyOperationToValues(Coprimes.FindGCD, CoFactors.Select(l => (int)l).ToList());
+			DisplayOutput(""); //ApplyOperationToValues(Coprimes.FindGCD, CoFactors.Select(l => (int)l).ToList());
 		}
 
 		private void btnEnumerateLCM_Click(object sender, EventArgs e)
 		{
-			ApplyOperationToValues(Coprimes.FindLCM, CoFactors.Select(l => (int)l).ToList());
+			IEnumerable<int> numbers = CoFactors.Select(l => (int)l);
+			DisplayOutput("LCM[{0}]:", string.Join(", ", numbers));
+			DisplayOutput("{0}", Coprimes.FindLCM(numbers));
+			DisplayOutput(""); //ApplyOperationToValues(Coprimes.FindLCM, CoFactors.Select(l => (int)l).ToList());
 		}
 
 		private void ApplyOperationToValues(Coprimes.BinaryOperationDelegate operation, List<int> values, bool useAnswers = true)
