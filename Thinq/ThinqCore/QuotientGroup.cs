@@ -13,9 +13,8 @@ namespace ThinqCore
 		private ulong _minReturnValue;
 		private ulong _maxReturnValue;
 		private ulong _maxReturnQuantity;
-		//private ulong _stepValue;
 		private ulong _counterValue;
-		private List<ulong> _coFactors;		
+		private List<ulong> _coFactors;
 		private ulong _counterValuesReturned;
 		private Debug debugMetrics;
 
@@ -34,7 +33,7 @@ namespace ThinqCore
 			_minReturnValue = minValue;
 			_maxReturnValue = maxValue;
 			_maxReturnQuantity = maxQuantity;
-			_coFactors = coFactors;			
+			_coFactors = coFactors;
 
 			_counterValue = 0;
 			_counterValuesReturned = 0;
@@ -100,13 +99,25 @@ namespace ThinqCore
 				Debug.InitialMessage(smallestFactor, largestFactor, smallestFactorQuotient, postYieldSkip);
 
 				bool isFactor = false;
-				_counterValue = _minReturnValue;
-				_counterValuesReturned = 1;
-				
-				// Set starting value, skip non-factors
-				while (_counterValue % smallestFactor != 0)
+				_counterValuesReturned = 0;
+
+				// No point in searching number less than the LCM
+				ulong lcm = (ulong)Coprimes.FindLCM(_coFactors.Select(l => (int)l).ToArray());
+
+				// Sometimes the lower limit is set higher than the LCM, in which case, don't overwrite it
+				if (lcm > _minReturnValue)
 				{
-					_counterValue += 1;
+					_counterValue = lcm;
+				}
+				else
+				{
+					_counterValue = _minReturnValue;
+
+					// Set starting value, skip non-factors
+					while (_counterValue % smallestFactor != 0)
+					{
+						_counterValue += 1;
+					}
 				}
 
 				debugMetrics.Reset();
@@ -148,10 +159,9 @@ namespace ThinqCore
 
 					if (isFactor)
 					{
-						string assertEquation = string.Format("{0} % {1} == 0", _counterValue, lastFactorValue);
-
-						yield return _counterValue;
 						_counterValuesReturned++;
+						yield return _counterValue;
+
 						_counterValue += postYieldSkip;
 
 						if (Settings.IsDebugBuild)
@@ -175,6 +185,8 @@ namespace ThinqCore
 			yield break;
 		}
 
+		#region Debug class
+
 		internal class Debug : IDisposable
 		{
 			public bool IsFirstLoop { get; private set; }
@@ -187,7 +199,7 @@ namespace ThinqCore
 
 			public Debug()
 			{
-				Clear();				
+				Clear();
 			}
 
 			public void Reset()
@@ -196,7 +208,7 @@ namespace ThinqCore
 				_counterFirstLoop_Skipped = 0;
 				_counterFirstLoop_FailFast = 0;
 				_counterDivisionOperations_Performed = 1; // Metrics (Debug)
-				_counterDivisionOperations_PostYieldSkipped = 0;				
+				_counterDivisionOperations_PostYieldSkipped = 0;
 			}
 
 			private void Clear()
@@ -260,6 +272,8 @@ namespace ThinqCore
 				Console.WriteLine();
 			}
 		}
+
+		#endregion
 
 	} // END class QuotientGroup
 }
