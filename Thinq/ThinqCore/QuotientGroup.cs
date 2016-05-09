@@ -190,7 +190,6 @@ namespace ThinqCore
 		internal class Debug : IDisposable
 		{
 			public bool IsFirstLoop { get; private set; }
-			internal TimeSpan _processingTotalTime; // Performance counter
 			internal ulong _counterFirstLoop_Skipped;
 			internal ulong _counterFirstLoop_FailFast;
 			internal ulong _counterDivisionOperations_Performed;
@@ -218,7 +217,6 @@ namespace ThinqCore
 				_counterFirstLoop_FailFast = 0;
 				_counterDivisionOperations_Performed = 0;
 				_counterDivisionOperations_PostYieldSkipped = 0;
-				_processingTotalTime = TimeSpan.Zero;
 			}
 
 			public void Dispose()

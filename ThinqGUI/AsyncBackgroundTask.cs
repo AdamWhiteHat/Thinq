@@ -75,7 +75,7 @@ namespace ThinqGUI
 		/// <summary>
 		///  Initializes a new instance of the AsyncBackgroundTask class.
 		/// </summary>		
-		public AsyncBackgroundTask(MainForm mainForm)
+		public AsyncBackgroundTask()
 		{
 			_operationStats = new Stats();
 			_backgroundWorker = new BackgroundWorker();
