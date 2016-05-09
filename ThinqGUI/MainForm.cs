@@ -110,7 +110,7 @@ namespace ThinqGUI
 				backgroundTask = null;
 			}
 
-			backgroundTask = new AsyncBackgroundTask(this);
+			backgroundTask = new AsyncBackgroundTask();
 			if (backgroundTask != null)
 			{
 				SetControlsStatus(false);
@@ -237,7 +237,7 @@ namespace ThinqGUI
 			IEnumerable<int> numbers = CoFactors.Select(l => (int)l);
 			DisplayOutput("GCD[{0}]:", string.Join(", ", numbers));
 			DisplayOutput("{0}", Coprimes.FindGCD(numbers));
-			DisplayOutput(""); //ApplyOperationToValues(Coprimes.FindGCD, CoFactors.Select(l => (int)l).ToList());
+			DisplayOutput("");
 		}
 
 		private void btnEnumerateLCM_Click(object sender, EventArgs e)
@@ -245,27 +245,8 @@ namespace ThinqGUI
 			IEnumerable<int> numbers = CoFactors.Select(l => (int)l);
 			DisplayOutput("LCM[{0}]:", string.Join(", ", numbers));
 			DisplayOutput("{0}", Coprimes.FindLCM(numbers));
-			DisplayOutput(""); //ApplyOperationToValues(Coprimes.FindLCM, CoFactors.Select(l => (int)l).ToList());
-		}
-
-		private void ApplyOperationToValues(Coprimes.BinaryOperationDelegate operation, List<int> values, bool useAnswers = true)
-		{
-			int lastValue = values.First();			
-			List<int> inputValues = values.Except(new int[] { lastValue }).ToList();			
-			Coprimes.BinaryOperationDelegate operationFunction = operation;
-
-			List<int> results = new List<int>();
-			foreach (int number in inputValues)
-			{
-				int answer = operationFunction.Invoke(lastValue, number);
-				results.Add(answer);
-
-				lastValue = useAnswers ? answer : number;
-			}
-
-			DisplayOutput("{0}[{1}]: ({2} results)", operationFunction.Method.Name, string.Join(", ", values), results.Count);
-			DisplayOutput(string.Join(Environment.NewLine, results));
 			DisplayOutput("");
 		}
+
 	}
 }
