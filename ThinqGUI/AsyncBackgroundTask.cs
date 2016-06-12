@@ -187,6 +187,10 @@ namespace ThinqGUI
 				int padLen = maxValue.ToString().Length;
 				ulong[] cofactors = Program.ThinqMainForm.CoFactors.ToArray();
 
+				//Program.DisplayFunction(string.Format("Max: {0:n0}", maxValue));	
+				Program.DisplayFunction(string.Format("LCM[{0}]", string.Join(",", cofactors)));
+				Program.DisplayFunction("----");
+
 				try
 				{
 					_operationStats.Counter = 0;
@@ -207,9 +211,7 @@ namespace ThinqGUI
 					_operationStats.ProcessingTime = DateTime.Now.Subtract(startTime);
 
 					StringBuilder strBldr = new StringBuilder();
-					strBldr.AppendLine("-------------------------------");
-					strBldr.AppendFormat("Max: {0:n0}", maxValue).AppendLine();
-					strBldr.AppendFormat("LCM[{0}]", string.Join(",", cofactors)).AppendLine();
+					strBldr.AppendLine();				
 					strBldr.AppendFormat("Factors found: {0}", _operationStats.Counter).AppendLine();
 					strBldr.AppendFormat("Time elapsed: {0}", _operationStats.ProcessingTime.ToString(@"mm\:ss\.ff"));
 

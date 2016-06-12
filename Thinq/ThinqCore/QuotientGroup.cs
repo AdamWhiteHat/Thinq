@@ -80,7 +80,7 @@ namespace ThinqCore
 				ulong largestFactor = _coFactors.LastOrDefault(); // Largest value	
 				ulong smallestFactor = _coFactors.FirstOrDefault(); // Smallest value				
 				ulong smallestFactorQuotient = largestFactor / smallestFactor;
-				_coFactors.Remove(smallestFactor);
+				//_coFactors.Remove(smallestFactor);
 
 				// Roll quotient back by one (floor)
 				if (largestFactor % smallestFactor == 0)
@@ -94,15 +94,12 @@ namespace ThinqCore
 				{
 					postYieldSkip = (smallestFactor * smallestFactorQuotient);
 				}
-
-				// Record variables to console
-				Debug.InitialMessage(smallestFactor, largestFactor, smallestFactorQuotient, postYieldSkip);
-
-				bool isFactor = false;
-				_counterValuesReturned = 0;
-
+				
 				// No point in searching number less than the LCM
 				ulong lcm = (ulong)Coprimes.FindLCM(_coFactors.Select(l => (int)l).ToArray());
+
+				// Record variables to console
+				Debug.InitialMessage(smallestFactor, largestFactor, smallestFactorQuotient, postYieldSkip, lcm);
 
 				// Sometimes the lower limit is set higher than the LCM, in which case, don't overwrite it
 				if (lcm > _minReturnValue)
@@ -119,29 +116,31 @@ namespace ThinqCore
 						_counterValue += 1;
 					}
 				}
+				
+				bool isFactor = false;
+				_counterValuesReturned = 0;	
 
 				debugMetrics.Reset();
 
 				List<ulong> otherFactors = _coFactors.OrderByDescending(i => i).ToList();
-				while (_counterValue < _maxReturnValue && _counterValuesReturned < _maxReturnQuantity)
+				while (_counterValue < _maxReturnValue
+					&& _counterValuesReturned < _maxReturnQuantity)
 				{
-					// Increment count by smallest factor
-					_counterValue += smallestFactor;
-
 					debugMetrics.NewLoop(); // Signify new sub-loop to metrics ()
-					ulong lastFactorValue = 0; isFactor = true; // Reset loop variables
+					isFactor = true; // Reset loop variables
 					foreach (ulong factor in otherFactors)
 					{
-						lastFactorValue = factor; // Set last factor
+						if (CancellationPending) // Cancel request
+						{
+							Debug.BreakMessage(this);
+							yield break;
+						}
+
 						isFactor &= (_counterValue % factor == 0); // Divide
 
 						// Metrics
 						debugMetrics.OnFirstDivisionOperation();
-
-						if (CancellationPending) // Cancel request
-						{
-							break;
-						}
+						
 						if (!isFactor) // Try different number if even one cofactor is not a factor
 						{
 							break;
@@ -165,18 +164,21 @@ namespace ThinqCore
 						_counterValue += postYieldSkip;
 
 						if (Settings.IsDebugBuild)
-						{ debugMetrics._counterDivisionOperations_PostYieldSkipped += postYieldSkip; }
+						{
+							debugMetrics._counterDivisionOperations_PostYieldSkipped += postYieldSkip;
+						}
 
 						if (IsDisposed)
 						{
-							break;
+							yield break;
 						}
 					}
-
-					if (CancellationPending)
+					else
 					{
-						break;
+						_counterValue += smallestFactor;
 					}
+					
+					
 				}
 
 				Debug.BreakMessage(this);
@@ -184,7 +186,7 @@ namespace ThinqCore
 
 			yield break;
 		}
-
+		
 		#region Debug class
 
 		internal class Debug : IDisposable
@@ -236,13 +238,11 @@ namespace ThinqCore
 			}
 
 			[Conditional("DEBUG")]
-			public static void InitialMessage(ulong smallestFactor, ulong largestFactor, ulong smallestFactorQuotient, ulong postYieldSkip)
+			public static void InitialMessage(ulong smallestFactor, ulong largestFactor, ulong smallestFactorQuotient, ulong postYieldSkip, ulong lcm)
 			{
-				Console.WriteLine("smallestFactor: {0:n0}",smallestFactor);
-				Console.WriteLine("largestFactor: {0:n0}",largestFactor);
-				Console.WriteLine("smallestFactorQuotient: {0:n0}", smallestFactorQuotient);
-				Console.WriteLine("postYieldSkip: {0:n0}", postYieldSkip);
-				Console.WriteLine();
+				Console.WriteLine("(largestFactor: {0:n0} / smallestFactor: {1:n0}) = smallestFactorQuotient: {2:n0}", largestFactor, smallestFactor, smallestFactorQuotient);
+				Console.WriteLine("(smallestFactor * smallestFactorQuotient) = postYieldSkip: {0:n0}", postYieldSkip);
+				Console.WriteLine("LCM: {0:n0}", lcm);				
 			}
 
 			[Conditional("DEBUG")]
