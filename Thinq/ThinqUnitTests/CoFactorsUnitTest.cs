@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Numerics;
 
 using ThinqCore;
 
@@ -13,14 +14,14 @@ namespace ThinqUnitTests
 		[TestMethod]
 		public void TestCoFactorsExplicit()
 		{
-			ulong minValue = 800100100;
-			ulong maxValue = 900000000;
-			ulong[] cofactors = new ulong[] { 3, 7, 11, 13, 17, 19, 23 };
+			BigInteger minValue = 800100100;
+			BigInteger maxValue = 900000000;
+			BigInteger[] cofactors = new BigInteger[] { 3, 7, 11, 13, 17, 19, 23 };
 			int expectedFactorCount = 5;
-			List<ulong> expectedValues = new List<ulong>() { 803134332, 825443619, 847752906, 870062193, 892371480 };
+			List<BigInteger> expectedValues = new List<BigInteger>() { 803134332, 825443619, 847752906, 870062193, 892371480 };
 
-			Intersection intersection = new Intersection(minValue, maxValue, cofactors);
-			List<ulong> intersectionResult = intersection.GetEnumerable().ToList();
+			Intersection intersection = new Intersection(minValue, maxValue, cofactors, new BigInteger(1000000));
+			List<BigInteger> intersectionResult = intersection.GetEnumerable().ToList();
 			int resultFactorCount = intersectionResult.Count;
 
 			Assert.AreEqual(expectedFactorCount, resultFactorCount);
@@ -30,15 +31,15 @@ namespace ThinqUnitTests
 		[TestMethod]
 		public void TestCoFactorsCount()
 		{
-			ulong minValue = 4300100100;
-			ulong maxValue = 9000000000;
-			ulong[] cofactors = new ulong[] { 251, 257, 259, 263 };
+			BigInteger minValue = 4300100100;
+			BigInteger maxValue = 9000000000;
+			BigInteger[] cofactors = new BigInteger[] { 251, 257, 259, 263 };
 			int expectedFactorCount = 2;
-			ulong expectedFirst = 4394023319;
-			ulong expectedLast = 8788046638;
+			BigInteger expectedFirst = 4394023319;
+			BigInteger expectedLast = 8788046638;
 
-			Intersection intersection = new Intersection(minValue, maxValue, cofactors);
-			List<ulong> intersectionResult = intersection.GetEnumerable().ToList();
+			Intersection intersection = new Intersection(minValue, maxValue, cofactors, new BigInteger(1000000));
+			List<BigInteger> intersectionResult = intersection.GetEnumerable().ToList();
 			int resultFactorCount = intersectionResult.Count;
 
 			Assert.AreEqual(expectedFactorCount, resultFactorCount);
@@ -49,13 +50,13 @@ namespace ThinqUnitTests
 		[TestMethod]
 		public void TestCoFactorsEmpty()
 		{
-			ulong minValue = 4200100100;
-			ulong maxValue = 8300100100;
-			ulong[] cofactors = new ulong[] { 251, 257, 64506 };
+			BigInteger minValue = 4200100100;
+			BigInteger maxValue = 8300100100;
+			BigInteger[] cofactors = new BigInteger[] { 251, 257, 64506 };
 			int expectedFactorCount = 0;
 
-			Intersection intersection = new Intersection(minValue, maxValue, cofactors);
-			List<ulong> intersectionResult = intersection.GetEnumerable().ToList();
+			Intersection intersection = new Intersection(minValue, maxValue, cofactors, new BigInteger(1000000));
+			List<BigInteger> intersectionResult = intersection.GetEnumerable().ToList();
 			int resultFactorCount = intersectionResult.Count;
 
 			Assert.AreEqual(expectedFactorCount, resultFactorCount);

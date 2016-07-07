@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Numerics;
 using ThinqCore;
 
 namespace ThinqGUI
@@ -181,11 +182,11 @@ namespace ThinqGUI
 			if (!IsDisposed && !CancellationPending && _intersectionSet == null)
 			{
 				DateTime startTime = DateTime.Now;
-				ulong minValue = Program.ThinqMainForm.ResultMinValue;
-				ulong maxValue = Program.ThinqMainForm.ResultMaxValue;
-				ulong maxQuantity = Program.ThinqMainForm.ResultMaxQuantity;
+				BigInteger minValue = Program.ThinqMainForm.ResultMinValue;
+				BigInteger maxValue = Program.ThinqMainForm.ResultMaxValue;
+				BigInteger maxQuantity = Program.ThinqMainForm.ResultMaxQuantity;
 				int padLen = maxValue.ToString().Length;
-				ulong[] cofactors = Program.ThinqMainForm.CoFactors.ToArray();
+				BigInteger[] cofactors = Program.ThinqMainForm.CoFactors.ToArray();
 
 				//Program.DisplayFunction(string.Format("Max: {0:n0}", maxValue));	
 				Program.DisplayFunction(string.Format("LCM[{0}]", string.Join(",", cofactors)));
@@ -195,7 +196,7 @@ namespace ThinqGUI
 				{
 					_operationStats.Counter = 0;
 					_intersectionSet = new Intersection(minValue, maxValue, cofactors, maxQuantity);
-					foreach (ulong factor in _intersectionSet.GetEnumerable())
+					foreach (BigInteger factor in _intersectionSet.GetEnumerable())
 					{
 						_operationStats.Counter++;
 						Program.DisplayFunction(string.Concat("{0,", padLen.ToString(), "}"), factor);

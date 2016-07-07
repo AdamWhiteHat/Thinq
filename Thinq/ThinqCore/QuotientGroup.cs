@@ -5,23 +5,24 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Numerics;
 
 namespace ThinqCore
 {
 	public class QuotientGroup : IDisposable
 	{
-		private ulong _minReturnValue;
-		private ulong _maxReturnValue;
-		private ulong _maxReturnQuantity;
-		private ulong _counterValue;
-		private List<ulong> _coFactors;
-		private ulong _counterValuesReturned;
+		private BigInteger _minReturnValue;
+		private BigInteger _maxReturnValue;
+		private BigInteger _maxReturnQuantity;
+		private BigInteger _counterValue;
+		private List<BigInteger> _coFactors;
+		private BigInteger _counterValuesReturned;
 		private Debug debugMetrics;
 
 		public bool IsDisposed { get; private set; }
 		public bool CancellationPending { get; internal set; }
 
-		public QuotientGroup(ulong minValue, ulong maxValue, List<ulong> coFactors, ulong maxQuantity = 1000000)
+		public QuotientGroup(BigInteger minValue, BigInteger maxValue, List<BigInteger> coFactors, BigInteger maxQuantity)
 		{
 			if (maxValue <= minValue) { throw new ArgumentOutOfRangeException("maxValue must be greater than minValue"); }
 			if (minValue > maxValue) { throw new ArgumentOutOfRangeException("maxValue minus minValue must be greater than or equal to stepValue"); }
@@ -69,7 +70,7 @@ namespace ThinqCore
 			}
 		}
 
-		public IEnumerable<ulong> GetEnumerable()
+		public IEnumerable<BigInteger> GetEnumerable()
 		{
 			if (!IsDisposed && !CancellationPending)
 			{
@@ -77,9 +78,9 @@ namespace ThinqCore
 				_coFactors = _coFactors.Distinct().OrderBy(i => i).ToList();
 
 				// Get largest, smallest, quotient
-				ulong largestFactor = _coFactors.LastOrDefault(); // Largest value	
-				ulong smallestFactor = _coFactors.FirstOrDefault(); // Smallest value				
-				ulong smallestFactorQuotient = largestFactor / smallestFactor;
+				BigInteger largestFactor = _coFactors.LastOrDefault(); // Largest value	
+				BigInteger smallestFactor = _coFactors.FirstOrDefault(); // Smallest value				
+				BigInteger smallestFactorQuotient = largestFactor / smallestFactor;
 				//_coFactors.Remove(smallestFactor);
 
 				// Roll quotient back by one (floor)
@@ -89,14 +90,14 @@ namespace ThinqCore
 				}
 
 				// Number to skip after each return yield
-				ulong postYieldSkip = 0;
+				BigInteger postYieldSkip = 0;
 				if (smallestFactorQuotient > 0)
 				{
 					postYieldSkip = (smallestFactor * smallestFactorQuotient);
 				}
 				
 				// No point in searching number less than the LCM
-				ulong lcm = (ulong)Coprimes.FindLCM(_coFactors.Select(l => (int)l).ToArray());
+				BigInteger lcm = (BigInteger)Coprimes.FindLCM(_coFactors.Select(l => (int)l).ToArray());
 
 				// Record variables to console
 				Debug.InitialMessage(smallestFactor, largestFactor, smallestFactorQuotient, postYieldSkip, lcm);
@@ -122,13 +123,13 @@ namespace ThinqCore
 
 				debugMetrics.Reset();
 
-				List<ulong> otherFactors = _coFactors.OrderByDescending(i => i).ToList();
+				List<BigInteger> otherFactors = _coFactors.OrderByDescending(i => i).ToList();
 				while (_counterValue < _maxReturnValue
 					&& _counterValuesReturned < _maxReturnQuantity)
 				{
 					debugMetrics.NewLoop(); // Signify new sub-loop to metrics ()
 					isFactor = true; // Reset loop variables
-					foreach (ulong factor in otherFactors)
+					foreach (BigInteger factor in otherFactors)
 					{
 						if (CancellationPending) // Cancel request
 						{
@@ -152,7 +153,7 @@ namespace ThinqCore
 						if (debugMetrics.IsFirstLoop)
 						{
 							debugMetrics._counterFirstLoop_FailFast++;
-							debugMetrics._counterFirstLoop_Skipped += (ulong)_coFactors.TakeWhile(i => _counterValue % i == 0).Count();
+							debugMetrics._counterFirstLoop_Skipped += (BigInteger)_coFactors.TakeWhile(i => _counterValue % i == 0).Count();
 						}
 					}
 
@@ -192,11 +193,11 @@ namespace ThinqCore
 		internal class Debug : IDisposable
 		{
 			public bool IsFirstLoop { get; private set; }
-			internal ulong _counterFirstLoop_Skipped;
-			internal ulong _counterFirstLoop_FailFast;
-			internal ulong _counterDivisionOperations_Performed;
-			internal ulong _counterDivisionOperations_PostYieldSkipped;
-			internal ulong _counterDivisionOperations_TotalSkipped { get { return _counterDivisionOperations_PostYieldSkipped + _counterFirstLoop_Skipped; } }
+			internal BigInteger _counterFirstLoop_Skipped;
+			internal BigInteger _counterFirstLoop_FailFast;
+			internal BigInteger _counterDivisionOperations_Performed;
+			internal BigInteger _counterDivisionOperations_PostYieldSkipped;
+			internal BigInteger _counterDivisionOperations_TotalSkipped { get { return _counterDivisionOperations_PostYieldSkipped + _counterFirstLoop_Skipped; } }
 
 			public Debug()
 			{
@@ -238,7 +239,7 @@ namespace ThinqCore
 			}
 
 			[Conditional("DEBUG")]
-			public static void InitialMessage(ulong smallestFactor, ulong largestFactor, ulong smallestFactorQuotient, ulong postYieldSkip, ulong lcm)
+			public static void InitialMessage(BigInteger smallestFactor, BigInteger largestFactor, BigInteger smallestFactorQuotient, BigInteger postYieldSkip, BigInteger lcm)
 			{
 				Console.WriteLine("(largestFactor: {0:n0} / smallestFactor: {1:n0}) = smallestFactorQuotient: {2:n0}", largestFactor, smallestFactor, smallestFactorQuotient);
 				Console.WriteLine("(smallestFactor * smallestFactorQuotient) = postYieldSkip: {0:n0}", postYieldSkip);

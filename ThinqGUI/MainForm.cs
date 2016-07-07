@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 
 using ThinqCore;
+using System.Numerics;
 
 namespace ThinqGUI
 {
@@ -62,13 +63,13 @@ namespace ThinqGUI
 
 		#region CoFactor Enumeration
 
-		public ulong ResultMinValue { get { return tbResultMinValue.ToUInt64(); } }
-		public ulong ResultMaxValue { get { return tbResultMaxValue.ToUInt64(); } }
-		public ulong ResultMaxQuantity { get { return tbResultMaxQuantity.ToUInt64(); } }
-		public List<ulong> CoFactors { get { return listCoFactors.Items.Cast<string>().Select(s => TryParse.UInt64(s)).ToList(); } }
+		public BigInteger ResultMinValue { get { return new BigInteger(tbResultMinValue.ToUInt64()); } }
+		public BigInteger ResultMaxValue { get { return new BigInteger(tbResultMaxValue.ToUInt64()); } }
+		public BigInteger ResultMaxQuantity { get { return new BigInteger(tbResultMaxQuantity.ToUInt64()); } }
+		public List<BigInteger> CoFactors { get { return listCoFactors.Items.Cast<string>().Select(s => new BigInteger( TryParse.UInt64(s))).ToList(); } }
 
 		private AsyncBackgroundTask backgroundTask = null;
-
+		 
 		private void btnEnumerateCoFactors_Click(object sender, EventArgs e)
 		{
 			Console.Clear();
