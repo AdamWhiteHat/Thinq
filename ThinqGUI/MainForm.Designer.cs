@@ -55,6 +55,8 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
 			this.groupCoprime = new System.Windows.Forms.GroupBox();
+			this.btnEnumerateGCD = new System.Windows.Forms.Button();
+			this.btnEnumerateLCM = new System.Windows.Forms.Button();
 			this.groupFactors = new System.Windows.Forms.GroupBox();
 			this.panelFactors = new System.Windows.Forms.Panel();
 			this.btnCancelEnumerateCoFactors = new System.Windows.Forms.Button();
@@ -63,10 +65,6 @@
 			this.label11 = new System.Windows.Forms.Label();
 			this.tbResultMinValue = new System.Windows.Forms.TextBox();
 			this.label10 = new System.Windows.Forms.Label();
-			this.btnEnumerateGCD = new System.Windows.Forms.Button();
-			this.btnEnumerateLCM = new System.Windows.Forms.Button();
-			this.btnEnumeratePiDigit = new System.Windows.Forms.Button();
-			this.tbPiDigit = new System.Windows.Forms.TextBox();
 			this.panelOutput.SuspendLayout();
 			this.contextMenuCoFactors.SuspendLayout();
 			this.groupCoprime.SuspendLayout();
@@ -103,20 +101,20 @@
 			// 
 			// tbCoPrimeTo
 			// 
-			this.tbCoPrimeTo.Location = new System.Drawing.Point(8, 20);
+			this.tbCoPrimeTo.Location = new System.Drawing.Point(31, 19);
 			this.tbCoPrimeTo.Name = "tbCoPrimeTo";
-			this.tbCoPrimeTo.Size = new System.Drawing.Size(60, 20);
+			this.tbCoPrimeTo.Size = new System.Drawing.Size(81, 20);
 			this.tbCoPrimeTo.TabIndex = 0;
 			this.tbCoPrimeTo.Text = "256";
 			this.tbCoPrimeTo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// tbCoPrimeMin
 			// 
-			this.tbCoPrimeMin.Location = new System.Drawing.Point(82, 20);
+			this.tbCoPrimeMin.Location = new System.Drawing.Point(128, 19);
 			this.tbCoPrimeMin.Name = "tbCoPrimeMin";
-			this.tbCoPrimeMin.Size = new System.Drawing.Size(60, 20);
+			this.tbCoPrimeMin.Size = new System.Drawing.Size(81, 20);
 			this.tbCoPrimeMin.TabIndex = 1;
-			this.tbCoPrimeMin.Text = "2";
+			this.tbCoPrimeMin.Text = "600";
 			this.tbCoPrimeMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// tbResultMaxValue
@@ -125,7 +123,7 @@
 			this.tbResultMaxValue.Name = "tbResultMaxValue";
 			this.tbResultMaxValue.Size = new System.Drawing.Size(109, 20);
 			this.tbResultMaxValue.TabIndex = 3;
-			this.tbResultMaxValue.Text = "20,000,000";
+			this.tbResultMaxValue.Text = "4,500,000,000";
 			this.tbResultMaxValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// label1
@@ -139,29 +137,30 @@
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(9, 42);
+			this.label3.Location = new System.Drawing.Point(30, 41);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(59, 13);
+			this.label3.Size = new System.Drawing.Size(81, 13);
 			this.label3.TabIndex = 8;
 			this.label3.Text = "CoPrime to";
 			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(82, 42);
+			this.label2.Location = new System.Drawing.Point(128, 41);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(137, 13);
+			this.label2.Size = new System.Drawing.Size(179, 13);
 			this.label2.TabIndex = 9;
 			this.label2.Text = "Range (min / max)";
-			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// btnEnumerateCoprimes
 			// 
-			this.btnEnumerateCoprimes.Location = new System.Drawing.Point(225, 18);
+			this.btnEnumerateCoprimes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnEnumerateCoprimes.Location = new System.Drawing.Point(328, 12);
 			this.btnEnumerateCoprimes.Name = "btnEnumerateCoprimes";
-			this.btnEnumerateCoprimes.Size = new System.Drawing.Size(97, 23);
+			this.btnEnumerateCoprimes.Size = new System.Drawing.Size(82, 48);
 			this.btnEnumerateCoprimes.TabIndex = 3;
-			this.btnEnumerateCoprimes.Text = "Find Co-Primes";
+			this.btnEnumerateCoprimes.Text = "Find   Co-Primes";
 			this.btnEnumerateCoprimes.UseVisualStyleBackColor = true;
 			this.btnEnumerateCoprimes.Click += new System.EventHandler(this.btnCoprimes_Click);
 			// 
@@ -176,7 +175,10 @@
             "5",
             "7",
             "11",
-            "13"});
+            "13",
+            "23",
+            "101",
+            "103"});
 			this.listCoFactors.Location = new System.Drawing.Point(63, 3);
 			this.listCoFactors.Margin = new System.Windows.Forms.Padding(0);
 			this.listCoFactors.Name = "listCoFactors";
@@ -248,7 +250,6 @@
 			this.tbCoFactorAdd.Name = "tbCoFactorAdd";
 			this.tbCoFactorAdd.Size = new System.Drawing.Size(60, 20);
 			this.tbCoFactorAdd.TabIndex = 1;
-			this.tbCoFactorAdd.Text = "23";
 			this.tbCoFactorAdd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.tbCoFactorAdd.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbCoFactorAdd_KeyUp);
 			// 
@@ -266,17 +267,18 @@
 			// 
 			// tbCoPrimeMax
 			// 
-			this.tbCoPrimeMax.Location = new System.Drawing.Point(159, 20);
+			this.tbCoPrimeMax.Location = new System.Drawing.Point(227, 19);
 			this.tbCoPrimeMax.Name = "tbCoPrimeMax";
-			this.tbCoPrimeMax.Size = new System.Drawing.Size(60, 20);
+			this.tbCoPrimeMax.Size = new System.Drawing.Size(80, 20);
 			this.tbCoPrimeMax.TabIndex = 2;
-			this.tbCoPrimeMax.Text = "255";
+			this.tbCoPrimeMax.Text = "65000";
 			this.tbCoPrimeMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(71, 24);
+			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(115, 22);
 			this.label4.Margin = new System.Windows.Forms.Padding(0);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(10, 13);
@@ -287,7 +289,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(144, 24);
+			this.label6.Location = new System.Drawing.Point(212, 22);
 			this.label6.Margin = new System.Windows.Forms.Padding(0);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(12, 13);
@@ -300,6 +302,8 @@
 			this.groupCoprime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupCoprime.Controls.Add(this.btnEnumerateCoprimes);
+			this.groupCoprime.Controls.Add(this.btnEnumerateGCD);
+			this.groupCoprime.Controls.Add(this.btnEnumerateLCM);
 			this.groupCoprime.Controls.Add(this.tbCoPrimeTo);
 			this.groupCoprime.Controls.Add(this.label6);
 			this.groupCoprime.Controls.Add(this.tbCoPrimeMin);
@@ -309,10 +313,32 @@
 			this.groupCoprime.Controls.Add(this.label2);
 			this.groupCoprime.Location = new System.Drawing.Point(4, 4);
 			this.groupCoprime.Name = "groupCoprime";
-			this.groupCoprime.Size = new System.Drawing.Size(327, 67);
+			this.groupCoprime.Size = new System.Drawing.Size(496, 67);
 			this.groupCoprime.TabIndex = 25;
 			this.groupCoprime.TabStop = false;
 			this.groupCoprime.Text = "Co-Prime";
+			// 
+			// btnEnumerateGCD
+			// 
+			this.btnEnumerateGCD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnEnumerateGCD.Location = new System.Drawing.Point(416, 12);
+			this.btnEnumerateGCD.Name = "btnEnumerateGCD";
+			this.btnEnumerateGCD.Size = new System.Drawing.Size(75, 23);
+			this.btnEnumerateGCD.TabIndex = 27;
+			this.btnEnumerateGCD.Text = "Find GCD";
+			this.btnEnumerateGCD.UseVisualStyleBackColor = true;
+			this.btnEnumerateGCD.Click += new System.EventHandler(this.btnEnumerateGCD_Click);
+			// 
+			// btnEnumerateLCM
+			// 
+			this.btnEnumerateLCM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnEnumerateLCM.Location = new System.Drawing.Point(416, 37);
+			this.btnEnumerateLCM.Name = "btnEnumerateLCM";
+			this.btnEnumerateLCM.Size = new System.Drawing.Size(75, 23);
+			this.btnEnumerateLCM.TabIndex = 28;
+			this.btnEnumerateLCM.Text = "Find LCM";
+			this.btnEnumerateLCM.UseVisualStyleBackColor = true;
+			this.btnEnumerateLCM.Click += new System.EventHandler(this.btnEnumerateLCM_Click);
 			// 
 			// groupFactors
 			// 
@@ -396,7 +422,7 @@
 			this.tbResultMinValue.Name = "tbResultMinValue";
 			this.tbResultMinValue.Size = new System.Drawing.Size(109, 20);
 			this.tbResultMinValue.TabIndex = 21;
-			this.tbResultMinValue.Text = "2";
+			this.tbResultMinValue.Text = "3,592,624,039";
 			this.tbResultMinValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// label10
@@ -408,53 +434,11 @@
 			this.label10.Text = "Min result value";
 			this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// btnEnumerateGCD
-			// 
-			this.btnEnumerateGCD.Location = new System.Drawing.Point(420, 8);
-			this.btnEnumerateGCD.Name = "btnEnumerateGCD";
-			this.btnEnumerateGCD.Size = new System.Drawing.Size(75, 23);
-			this.btnEnumerateGCD.TabIndex = 27;
-			this.btnEnumerateGCD.Text = "Find GCD";
-			this.btnEnumerateGCD.UseVisualStyleBackColor = true;
-			this.btnEnumerateGCD.Click += new System.EventHandler(this.btnEnumerateGCD_Click);
-			// 
-			// btnEnumerateLCM
-			// 
-			this.btnEnumerateLCM.Location = new System.Drawing.Point(420, 31);
-			this.btnEnumerateLCM.Name = "btnEnumerateLCM";
-			this.btnEnumerateLCM.Size = new System.Drawing.Size(75, 23);
-			this.btnEnumerateLCM.TabIndex = 28;
-			this.btnEnumerateLCM.Text = "Find LCM";
-			this.btnEnumerateLCM.UseVisualStyleBackColor = true;
-			this.btnEnumerateLCM.Click += new System.EventHandler(this.btnEnumerateLCM_Click);
-			// 
-			// btnEnumeratePiDigit
-			// 
-			this.btnEnumeratePiDigit.Location = new System.Drawing.Point(420, 54);
-			this.btnEnumeratePiDigit.Name = "btnEnumeratePiDigit";
-			this.btnEnumeratePiDigit.Size = new System.Drawing.Size(75, 23);
-			this.btnEnumeratePiDigit.TabIndex = 29;
-			this.btnEnumeratePiDigit.Text = "Find Pi Digit";
-			this.btnEnumeratePiDigit.UseVisualStyleBackColor = true;
-			// 
-			// tbPiDigit
-			// 
-			this.tbPiDigit.Location = new System.Drawing.Point(354, 56);
-			this.tbPiDigit.Name = "tbPiDigit";
-			this.tbPiDigit.Size = new System.Drawing.Size(60, 20);
-			this.tbPiDigit.TabIndex = 30;
-			this.tbPiDigit.Text = "7";
-			this.tbPiDigit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(504, 381);
-			this.Controls.Add(this.tbPiDigit);
-			this.Controls.Add(this.btnEnumeratePiDigit);
-			this.Controls.Add(this.btnEnumerateLCM);
-			this.Controls.Add(this.btnEnumerateGCD);
 			this.Controls.Add(this.groupFactors);
 			this.Controls.Add(this.groupCoprime);
 			this.Controls.Add(this.panelOutput);
@@ -470,7 +454,6 @@
 			this.panelFactors.ResumeLayout(false);
 			this.panelFactors.PerformLayout();
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
@@ -507,8 +490,6 @@
 		private System.Windows.Forms.Label label11;
 		private System.Windows.Forms.Button btnEnumerateGCD;
 		private System.Windows.Forms.Button btnEnumerateLCM;
-		private System.Windows.Forms.Button btnEnumeratePiDigit;
-		private System.Windows.Forms.TextBox tbPiDigit;
 		public System.Windows.Forms.TextBox tbOutput;
 	}
 }

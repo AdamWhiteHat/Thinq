@@ -43,7 +43,7 @@ namespace ThinqCore
 			}
 		}
 
-		public void Dispose()
+		public void Dispose()			
 		{
 			if (!IsDisposed)
 			{

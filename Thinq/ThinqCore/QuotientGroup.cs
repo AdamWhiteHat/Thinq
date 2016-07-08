@@ -97,7 +97,7 @@ namespace ThinqCore
 				}
 				
 				// No point in searching number less than the LCM
-				BigInteger lcm = (BigInteger)Coprimes.FindLCM(_coFactors.Select(l => (int)l).ToArray());
+				BigInteger lcm = (BigInteger)Coprimes.FindLCM(_coFactors.Select(l => (BigInteger)l).ToArray());
 
 				// Record variables to console
 				Debug.InitialMessage(smallestFactor, largestFactor, smallestFactorQuotient, postYieldSkip, lcm);

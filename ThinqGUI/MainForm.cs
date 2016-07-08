@@ -38,14 +38,14 @@ namespace ThinqGUI
 
 		#region CoPrime Enumeration
 
-		public int CoprimeTo { get { return tbCoPrimeTo.ToInt32(); } }
-		public int CoprimeMin { get { return tbCoPrimeMin.ToInt32(); } }
-		public int CoprimeMax { get { return tbCoPrimeMax.ToInt32(); } }
+		public BigInteger CoprimeTo { get { return tbCoPrimeTo.ToInt32(); } }
+		public BigInteger CoprimeMin { get { return tbCoPrimeMin.ToInt32(); } }
+		public BigInteger CoprimeMax { get { return tbCoPrimeMax.ToInt32(); } }
 
 		private void btnCoprimes_Click(object sender, EventArgs e)
 		{
 			Coprimes coprimeFinder = new Coprimes(CoprimeTo, CoprimeMin, CoprimeMax);
-			List<int> coPrimes = coprimeFinder.GetCoprimes().ToList();
+			List<BigInteger> coPrimes = coprimeFinder.GetCoprimes().ToList();
 			string joinedCoprimes = string.Join(Environment.NewLine, coPrimes);
 
 			StringBuilder resultString = new StringBuilder();
@@ -235,7 +235,7 @@ namespace ThinqGUI
 
 		private void btnEnumerateGCD_Click(object sender, EventArgs e)
 		{
-			IEnumerable<int> numbers = CoFactors.Select(l => (int)l);
+			IEnumerable<BigInteger> numbers = CoFactors.Select(bi => (BigInteger)bi);
 			DisplayOutput("GCD[{0}]:", string.Join(", ", numbers));
 			DisplayOutput("{0}", Coprimes.FindGCD(numbers));
 			DisplayOutput("");
@@ -243,11 +243,12 @@ namespace ThinqGUI
 
 		private void btnEnumerateLCM_Click(object sender, EventArgs e)
 		{
-			IEnumerable<int> numbers = CoFactors.Select(l => (int)l);
+			IEnumerable<BigInteger> numbers = CoFactors.Select(bi => (BigInteger)bi);
 			DisplayOutput("LCM[{0}]:", string.Join(", ", numbers));
 			DisplayOutput("{0}", Coprimes.FindLCM(numbers));
 			DisplayOutput("");
 		}
+
 
 	}
 }

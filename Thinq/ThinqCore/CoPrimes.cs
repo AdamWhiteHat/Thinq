@@ -3,19 +3,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace ThinqCore
 {
 	public class Coprimes
 	{
-		public delegate int BinaryOperationDelegate(int value1, int value2);
-		public int Number { get; private set; }
-		public int Min { get; private set; }
-		public int Max { get; private set; }
+		public delegate BigInteger BinaryOperationDelegate(BigInteger value1, BigInteger value2);
+		public BigInteger Number { get; private set; }
+		public BigInteger Min { get; private set; }
+		public BigInteger Max { get; private set; }
 		
-		private int counter;
+		private BigInteger counter;
 
-		public Coprimes(int number, int min, int max)
+		public Coprimes(BigInteger number, BigInteger min, BigInteger max)
 		{
 			Number = number;
 			Min = min;
@@ -24,7 +25,7 @@ namespace ThinqCore
 			counter = Min;
 		}
 
-		public IEnumerable<int> GetCoprimes()
+		public IEnumerable<BigInteger> GetCoprimes()
 		{
 			if (Max < 2 || Min < 2 || Max <= Min || Number < 1) { yield break; }
 
@@ -39,22 +40,22 @@ namespace ThinqCore
 			yield break;
 		}
 
-		public static bool IsCoprime(int value1, int value2)
+		public static bool IsCoprime(BigInteger value1, BigInteger value2)
 		{
 			return FindGCD(value1, value2) == 1;
 		}
 
-		public static int FindGCD(IEnumerable<int> numbers)
+		public static BigInteger FindGCD(IEnumerable<BigInteger> numbers)
 		{
 			return numbers.Aggregate(FindGCD);
 		}
 
-		public static int FindLCM(IEnumerable<int> numbers)
+		public static BigInteger FindLCM(IEnumerable<BigInteger> numbers)
 		{
 			return numbers.Aggregate(FindLCM);
 		}
 
-		public static int FindGCD(int value1, int value2)
+		public static BigInteger FindGCD(BigInteger value1, BigInteger value2)
 		{
 			while (value1 != 0 && value2 != 0)
 			{
@@ -67,10 +68,15 @@ namespace ThinqCore
 					value2 %= value1;
 				}
 			}
-			return Math.Max(value1, value2);
+			return BigInteger.Max(value1, value2);
 		}
 
-		public static int FindLCM(int num1, int num2)
+		public static BigInteger FindGCDRecursive(BigInteger value1, BigInteger value2)
+		{
+			return value2 == 0 ? value1 : FindGCDRecursive(value2, value1 % value2);
+		}
+
+		public static BigInteger FindLCM(BigInteger num1, BigInteger num2)
 		{
 			return (num1 * num2) / FindGCD(num1, num2);
 		}
