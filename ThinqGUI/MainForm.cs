@@ -24,23 +24,28 @@ namespace ThinqGUI
 			panelFactors.Enabled = IsEnabled;
 			btnEnumerateCoFactors.Enabled = IsEnabled;
 			if (IsEnabled)
-			{
-				if (btnCancelEnumerateCoFactors.Enabled == false)
+			{				
+				if (!btnCancelEnumerateCoFactors.Enabled)
 				{
 					btnCancelEnumerateCoFactors.Enabled = true;
 				}
+				if (!btnCancelEnumerateCoFactors.Visible)
+				{
+					btnCancelEnumerateCoFactors.Visible = true;
+				}
 			}
 			else
-			{
-				btnCancelEnumerateCoFactors.Visible = true;
+			{				
+				btnCancelEnumerateCoFactors.Enabled = false;
+				btnCancelEnumerateCoFactors.Visible = false;
 			}
 		}
 
 		#region CoPrime Enumeration
 
-		public BigInteger CoprimeTo { get { return tbCoPrimeTo.ToInt32(); } }
-		public BigInteger CoprimeMin { get { return tbCoPrimeMin.ToInt32(); } }
-		public BigInteger CoprimeMax { get { return tbCoPrimeMax.ToInt32(); } }
+		public BigInteger CoprimeTo { get { return tbCoPrimeTo.ToBigInteger(); } }
+		public BigInteger CoprimeMin { get { return tbCoPrimeMin.ToBigInteger(); } }
+		public BigInteger CoprimeMax { get { return tbCoPrimeMax.ToBigInteger(); } }
 
 		private void btnCoprimes_Click(object sender, EventArgs e)
 		{
@@ -63,26 +68,20 @@ namespace ThinqGUI
 
 		#region CoFactor Enumeration
 
-		public BigInteger ResultMinValue { get { return new BigInteger(tbResultMinValue.ToUInt64()); } }
-		public BigInteger ResultMaxValue { get { return new BigInteger(tbResultMaxValue.ToUInt64()); } }
-		public BigInteger ResultMaxQuantity { get { return new BigInteger(tbResultMaxQuantity.ToUInt64()); } }
-		public List<BigInteger> CoFactors { get { return listCoFactors.Items.Cast<string>().Select(s => new BigInteger( TryParse.UInt64(s))).ToList(); } }
+		public BigInteger ResultMinValue { get { return tbResultMinValue.ToBigInteger(); } }
+		public BigInteger ResultMaxValue { get { return tbResultMaxValue.ToBigInteger(); } }
+		public BigInteger ResultMaxQuantity { get { return tbResultMaxQuantity.ToBigInteger(); } }
+		public List<BigInteger> CoFactors { get { return listCoFactors.Items.Cast<string>().Select(s => BigInteger.Parse(TryParse.RemoveNonDigits(s))).ToList(); } }
 
 		private AsyncBackgroundTask backgroundTask = null;
-		 
+
 		private void btnEnumerateCoFactors_Click(object sender, EventArgs e)
 		{
 			Console.Clear();
 			tbOutput.Clear();
+			btnCancelEnumerateCoFactors.Visible = true;
+			btnCancelEnumerateCoFactors.Enabled = true;
 			EnumerateCoFactors();
-		}
-
-		private void btnCancelEnumerateCoFactors_Click(object sender, EventArgs e)
-		{
-			if (backgroundTask.CancelAsync())
-			{
-				btnCancelEnumerateCoFactors.Enabled = false;
-			}
 		}
 
 		private void EnumerateCoFactors()
@@ -119,9 +118,33 @@ namespace ThinqGUI
 			}
 		}
 
+		private void btnEnumerateGCD_Click(object sender, EventArgs e)
+		{
+			IEnumerable<BigInteger> numbers = CoFactors.Select(bi => (BigInteger)bi);
+			DisplayOutput("GCD[{0}]:", string.Join(", ", numbers));
+			DisplayOutput("{0}", Coprimes.FindGCD(numbers));
+			DisplayOutput("");
+		}
+
+		private void btnEnumerateLCM_Click(object sender, EventArgs e)
+		{
+			IEnumerable<BigInteger> numbers = CoFactors.Select(bi => (BigInteger)bi);
+			DisplayOutput("LCM[{0}]:", string.Join(", ", numbers));
+			DisplayOutput("{0}", Coprimes.FindLCM(numbers));
+			DisplayOutput("");
+		}
+
 		private void btnAddCoFactor_Click(object sender, EventArgs e)
 		{
 			AddNewCoFactor();
+		}
+
+		private void btnCancelEnumerateCoFactors_Click(object sender, EventArgs e)
+		{
+			if (backgroundTask.CancelAsync())
+			{
+				btnCancelEnumerateCoFactors.Enabled = false;
+			}
 		}
 
 		private void tbCoFactorAdd_KeyUp(object sender, KeyEventArgs e)
@@ -147,7 +170,7 @@ namespace ThinqGUI
 
 		private void AddNewCoFactor()
 		{
-			ulong newCofactor = tbCoFactorAdd.ToUInt64();
+			BigInteger newCofactor = tbCoFactorAdd.ToBigInteger();
 			if (newCofactor > 1 && !CoFactors.Contains(newCofactor))
 			{
 				tbCoFactorAdd.Text = string.Empty;
@@ -232,23 +255,6 @@ namespace ThinqGUI
 		}
 
 		#endregion
-
-		private void btnEnumerateGCD_Click(object sender, EventArgs e)
-		{
-			IEnumerable<BigInteger> numbers = CoFactors.Select(bi => (BigInteger)bi);
-			DisplayOutput("GCD[{0}]:", string.Join(", ", numbers));
-			DisplayOutput("{0}", Coprimes.FindGCD(numbers));
-			DisplayOutput("");
-		}
-
-		private void btnEnumerateLCM_Click(object sender, EventArgs e)
-		{
-			IEnumerable<BigInteger> numbers = CoFactors.Select(bi => (BigInteger)bi);
-			DisplayOutput("LCM[{0}]:", string.Join(", ", numbers));
-			DisplayOutput("{0}", Coprimes.FindLCM(numbers));
-			DisplayOutput("");
-		}
-
 
 	}
 }
