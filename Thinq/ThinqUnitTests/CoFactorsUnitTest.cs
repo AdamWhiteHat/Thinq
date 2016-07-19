@@ -14,8 +14,8 @@ namespace ThinqUnitTests
 		[TestMethod]
 		public void TestCoFactorsExplicit()
 		{
-			BigInteger minValue = 800100100;
-			BigInteger maxValue = 900000000;
+			BigInteger minValue = 803134100;
+			BigInteger maxValue = 892372000;			                      
 			BigInteger[] cofactors = new BigInteger[] { 3, 7, 11, 13, 17, 19, 23 };
 			int expectedFactorCount = 5;
 			List<BigInteger> expectedValues = new List<BigInteger>() { 803134332, 825443619, 847752906, 870062193, 892371480 };
@@ -31,8 +31,8 @@ namespace ThinqUnitTests
 		[TestMethod]
 		public void TestCoFactorsCount()
 		{
-			BigInteger minValue = 4300100100;
-			BigInteger maxValue = 9000000000;
+			BigInteger minValue = 4394000100;
+			BigInteger maxValue = 8788050000;
 			BigInteger[] cofactors = new BigInteger[] { 251, 257, 259, 263 };
 			int expectedFactorCount = 2;
 			BigInteger expectedFirst = 4394023319;
@@ -50,8 +50,8 @@ namespace ThinqUnitTests
 		[TestMethod]
 		public void TestCoFactorsEmpty()
 		{
-			BigInteger minValue = 4200100100;
-			BigInteger maxValue = 8300100100;
+			BigInteger minValue = 8000100100;
+			BigInteger maxValue = 8322177083;
 			BigInteger[] cofactors = new BigInteger[] { 251, 257, 64506 };
 			int expectedFactorCount = 0;
 
