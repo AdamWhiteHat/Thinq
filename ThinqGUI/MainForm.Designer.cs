@@ -55,6 +55,7 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
 			this.groupCoprime = new System.Windows.Forms.GroupBox();
+			this.btnEnumeratePrimeFactors = new System.Windows.Forms.Button();
 			this.btnEnumerateGCD = new System.Windows.Forms.Button();
 			this.btnEnumerateLCM = new System.Windows.Forms.Button();
 			this.groupFactors = new System.Windows.Forms.GroupBox();
@@ -101,7 +102,7 @@
 			// 
 			// tbCoPrimeTo
 			// 
-			this.tbCoPrimeTo.Location = new System.Drawing.Point(31, 19);
+			this.tbCoPrimeTo.Location = new System.Drawing.Point(6, 19);
 			this.tbCoPrimeTo.Name = "tbCoPrimeTo";
 			this.tbCoPrimeTo.Size = new System.Drawing.Size(81, 20);
 			this.tbCoPrimeTo.TabIndex = 0;
@@ -110,7 +111,7 @@
 			// 
 			// tbCoPrimeMin
 			// 
-			this.tbCoPrimeMin.Location = new System.Drawing.Point(128, 19);
+			this.tbCoPrimeMin.Location = new System.Drawing.Point(103, 19);
 			this.tbCoPrimeMin.Name = "tbCoPrimeMin";
 			this.tbCoPrimeMin.Size = new System.Drawing.Size(81, 20);
 			this.tbCoPrimeMin.TabIndex = 1;
@@ -137,7 +138,7 @@
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(30, 41);
+			this.label3.Location = new System.Drawing.Point(5, 41);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(81, 13);
 			this.label3.TabIndex = 8;
@@ -146,7 +147,7 @@
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(128, 41);
+			this.label2.Location = new System.Drawing.Point(103, 41);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(179, 13);
 			this.label2.TabIndex = 9;
@@ -156,11 +157,11 @@
 			// btnEnumerateCoprimes
 			// 
 			this.btnEnumerateCoprimes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnEnumerateCoprimes.Location = new System.Drawing.Point(328, 12);
+			this.btnEnumerateCoprimes.Location = new System.Drawing.Point(288, 14);
 			this.btnEnumerateCoprimes.Name = "btnEnumerateCoprimes";
-			this.btnEnumerateCoprimes.Size = new System.Drawing.Size(82, 48);
+			this.btnEnumerateCoprimes.Size = new System.Drawing.Size(128, 23);
 			this.btnEnumerateCoprimes.TabIndex = 3;
-			this.btnEnumerateCoprimes.Text = "Find   Co-Primes";
+			this.btnEnumerateCoprimes.Text = "Find Co-Primes";
 			this.btnEnumerateCoprimes.UseVisualStyleBackColor = true;
 			this.btnEnumerateCoprimes.Click += new System.EventHandler(this.btnCoprimes_Click);
 			// 
@@ -267,7 +268,7 @@
 			// 
 			// tbCoPrimeMax
 			// 
-			this.tbCoPrimeMax.Location = new System.Drawing.Point(227, 19);
+			this.tbCoPrimeMax.Location = new System.Drawing.Point(202, 19);
 			this.tbCoPrimeMax.Name = "tbCoPrimeMax";
 			this.tbCoPrimeMax.Size = new System.Drawing.Size(80, 20);
 			this.tbCoPrimeMax.TabIndex = 2;
@@ -278,7 +279,7 @@
 			// 
 			this.label4.AutoSize = true;
 			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(115, 22);
+			this.label4.Location = new System.Drawing.Point(90, 22);
 			this.label4.Margin = new System.Windows.Forms.Padding(0);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(10, 13);
@@ -289,7 +290,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(212, 22);
+			this.label6.Location = new System.Drawing.Point(187, 22);
 			this.label6.Margin = new System.Windows.Forms.Padding(0);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(12, 13);
@@ -301,6 +302,7 @@
 			// 
 			this.groupCoprime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupCoprime.Controls.Add(this.btnEnumeratePrimeFactors);
 			this.groupCoprime.Controls.Add(this.btnEnumerateCoprimes);
 			this.groupCoprime.Controls.Add(this.btnEnumerateGCD);
 			this.groupCoprime.Controls.Add(this.btnEnumerateLCM);
@@ -318,10 +320,21 @@
 			this.groupCoprime.TabStop = false;
 			this.groupCoprime.Text = "Co-Prime";
 			// 
+			// btnEnumeratePrimeFactors
+			// 
+			this.btnEnumeratePrimeFactors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnEnumeratePrimeFactors.Location = new System.Drawing.Point(288, 37);
+			this.btnEnumeratePrimeFactors.Name = "btnEnumeratePrimeFactors";
+			this.btnEnumeratePrimeFactors.Size = new System.Drawing.Size(128, 23);
+			this.btnEnumeratePrimeFactors.TabIndex = 29;
+			this.btnEnumeratePrimeFactors.Text = "Find Prime Factors";
+			this.btnEnumeratePrimeFactors.UseVisualStyleBackColor = true;
+			this.btnEnumeratePrimeFactors.Click += new System.EventHandler(this.btnEnumeratePrimeFactors_Click);
+			// 
 			// btnEnumerateGCD
 			// 
 			this.btnEnumerateGCD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnEnumerateGCD.Location = new System.Drawing.Point(416, 12);
+			this.btnEnumerateGCD.Location = new System.Drawing.Point(416, 14);
 			this.btnEnumerateGCD.Name = "btnEnumerateGCD";
 			this.btnEnumerateGCD.Size = new System.Drawing.Size(75, 23);
 			this.btnEnumerateGCD.TabIndex = 27;
@@ -399,7 +412,7 @@
 			// btnEnumerateCoFactors
 			// 
 			this.btnEnumerateCoFactors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnEnumerateCoFactors.Location = new System.Drawing.Point(360, 8);
+			this.btnEnumerateCoFactors.Location = new System.Drawing.Point(359, 8);
 			this.btnEnumerateCoFactors.Name = "btnEnumerateCoFactors";
 			this.btnEnumerateCoFactors.Size = new System.Drawing.Size(67, 23);
 			this.btnEnumerateCoFactors.TabIndex = 30;
@@ -491,6 +504,7 @@
 		private System.Windows.Forms.Button btnEnumerateGCD;
 		private System.Windows.Forms.Button btnEnumerateLCM;
 		public System.Windows.Forms.TextBox tbOutput;
+		private System.Windows.Forms.Button btnEnumeratePrimeFactors;
 	}
 }
 

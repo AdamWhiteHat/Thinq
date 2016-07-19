@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Numerics;
+using System.Collections.Generic;
 
 namespace ThinqCore
 {
 	public class Coprimes
 	{
-		public delegate BigInteger BinaryOperationDelegate(BigInteger value1, BigInteger value2);
-		public BigInteger Number { get; private set; }
+		public BigInteger Target { get; private set; }
 		public BigInteger Min { get; private set; }
 		public BigInteger Max { get; private set; }
-		
+
 		private BigInteger counter;
 
-		public Coprimes(BigInteger number, BigInteger min, BigInteger max)
+		public Coprimes(BigInteger target, BigInteger min, BigInteger max)
 		{
-			Number = number;
+			Target = target;
 			Min = min;
 			Max = max;
 
@@ -27,15 +24,70 @@ namespace ThinqCore
 
 		public IEnumerable<BigInteger> GetCoprimes()
 		{
-			if (Max < 2 || Min < 2 || Max <= Min || Number < 1) { yield break; }
+			if (Max < 2 || Min < 1 || Max <= Min || Target < 1) { yield break; }
+
+			counter = Min;
 
 			while (counter < Max)
 			{
-				if (IsCoprime(Number, counter))
+				if (IsCoprime(Target, counter))
 				{
 					yield return counter;
 				}
 				counter++;
+			}
+			yield break;
+		}
+
+		public IEnumerable<BigInteger> GetPrimeFactors(int Count=2)
+		{
+			if (Max < 2 || Min < 1 || Max <= Min || Target < 1) { yield break; }
+
+			counter = Min;
+
+			if (counter % 2 == 0)
+			{
+				counter += 1;
+			}
+
+			List<BigInteger> factors = new List<BigInteger>();
+
+			while (counter < Max)
+			{				
+				if (factors.Count > 0)
+				{
+					if ((Count - factors.Count) == 1)
+					{
+						BigInteger product = factors.Aggregate(BigInteger.Multiply);
+						BigInteger remainder = new BigInteger();
+							
+						BigInteger quotient = BigInteger.DivRem(Target, product, out remainder);
+
+						if (remainder == 0)
+						{
+							factors.Add(quotient);
+							yield return quotient;
+						}
+					}
+
+					if (factors.Count == Count)
+					{
+						break;
+					}
+
+					if (factors.Any(f => !IsCoprime(f, counter)))
+					{
+						counter+=2;
+						continue;
+					}
+				}
+
+				if (!IsCoprime(Target, counter))
+				{
+					factors.Add(counter);
+					yield return counter;
+				}
+				counter+=2;
 			}
 			yield break;
 		}
@@ -69,11 +121,6 @@ namespace ThinqCore
 				}
 			}
 			return BigInteger.Max(value1, value2);
-		}
-
-		public static BigInteger FindGCDRecursive(BigInteger value1, BigInteger value2)
-		{
-			return value2 == 0 ? value1 : FindGCDRecursive(value2, value1 % value2);
 		}
 
 		public static BigInteger FindLCM(BigInteger num1, BigInteger num2)

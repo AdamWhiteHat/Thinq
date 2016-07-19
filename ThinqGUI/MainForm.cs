@@ -24,7 +24,7 @@ namespace ThinqGUI
 			panelFactors.Enabled = IsEnabled;
 			btnEnumerateCoFactors.Enabled = IsEnabled;
 			if (IsEnabled)
-			{				
+			{
 				if (!btnCancelEnumerateCoFactors.Enabled)
 				{
 					btnCancelEnumerateCoFactors.Enabled = true;
@@ -35,7 +35,7 @@ namespace ThinqGUI
 				}
 			}
 			else
-			{				
+			{
 				btnCancelEnumerateCoFactors.Enabled = false;
 				btnCancelEnumerateCoFactors.Visible = false;
 			}
@@ -49,14 +49,43 @@ namespace ThinqGUI
 
 		private void btnCoprimes_Click(object sender, EventArgs e)
 		{
+			DateTime startTime = DateTime.UtcNow;
 			Coprimes coprimeFinder = new Coprimes(CoprimeTo, CoprimeMin, CoprimeMax);
 			List<BigInteger> coPrimes = coprimeFinder.GetCoprimes().ToList();
 			string joinedCoprimes = string.Join(Environment.NewLine, coPrimes);
+			TimeSpan coprimesTimeElapsed = DateTime.UtcNow.Subtract(startTime);
+
+			coprimesTimeElapsed.ToString("m'm 's's.'FFFFFFF");
 
 			StringBuilder resultString = new StringBuilder();
 			resultString.AppendFormat("Total # of co-primes found in range: {0}", coPrimes.Count);
 			resultString.AppendLine();
+			resultString.AppendFormat("Total time elapsed: {0}", coprimesTimeElapsed.ToString("m'm 's's.'ffff"));
+			resultString.AppendLine();
 			resultString.Append(joinedCoprimes);
+
+			tbOutput.Clear();
+			DisplayOutput(resultString.ToString());
+			tbOutput.Select(0, 0);
+			tbOutput.ScrollToCaret();
+		}
+
+		private void btnEnumeratePrimeFactors_Click(object sender, EventArgs e)
+		{
+			DateTime startTime = DateTime.UtcNow;
+			Coprimes factorsFinder = new Coprimes(CoprimeTo, CoprimeMin, CoprimeMax);
+			List<BigInteger> factors = factorsFinder.GetPrimeFactors().ToList();
+			string joinedFactors = string.Join(Environment.NewLine, factors);
+			TimeSpan factorsTimeElapsed = DateTime.UtcNow.Subtract(startTime);
+
+			factorsTimeElapsed.ToString("m'm 's's.'FFFFFFF");
+
+			StringBuilder resultString = new StringBuilder();
+			resultString.AppendFormat("Total # of prime found in range: {0}", factors.Count);
+			resultString.AppendLine();
+			resultString.AppendFormat("Total time elapsed: {0}", factorsTimeElapsed.ToString("m'm 's's.'ffff"));
+			resultString.AppendLine();
+			resultString.Append(joinedFactors);
 
 			tbOutput.Clear();
 			DisplayOutput(resultString.ToString());
