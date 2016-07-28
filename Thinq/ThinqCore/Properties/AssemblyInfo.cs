@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ThinqCore")]
-[assembly: AssemblyDescription("Core assembly library for Thinq")]
+[assembly: AssemblyDescription("Use/Distribute/Modify with attribution")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("csharpprogramming.tips")]
 [assembly: AssemblyProduct("ThinqCore")]
-[assembly: AssemblyCopyright("Copyright © Adam Rakaska 2015")]
+[assembly: AssemblyCopyright("Adam Rakaska 2016 - Use/Distribute/Modify with attribution")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
