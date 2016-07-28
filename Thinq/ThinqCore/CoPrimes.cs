@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace ThinqCore
 {
@@ -15,11 +18,34 @@ namespace ThinqCore
 
 		public Coprimes(BigInteger target, BigInteger min, BigInteger max)
 		{
-			Target = target;
+			Target = new BigInteger(target.ToByteArray());
 			Min = min;
 			Max = max;
 
 			counter = Min;
+		}
+		
+		public List<BigInteger> GetCoprimesParallel()
+		{
+			if (Max < 2 || Min < 1 || Max <= Min || Target < 1) { throw new ArgumentException(); }
+
+			int[] intRange = Enumerable.Range((int)Min, (int)(Max - Min)).ToArray();
+
+			ThreadLocal<BigInteger> localTarget = 
+				new ThreadLocal<BigInteger>(() => new BigInteger(Target.ToByteArray()));
+
+			//BigInteger localTarget = new BigInteger(Target.ToByteArray());
+
+			ConcurrentBag<int> resultCollection = new ConcurrentBag<int>();
+			ParallelLoopResult result = Parallel.ForEach(intRange, count =>
+			{
+				if (IsCoprime(localTarget.Value, count))
+				{
+					resultCollection.Add(count);
+				}
+			});
+
+			return resultCollection.Select(i => (BigInteger)i).ToList();
 		}
 
 		public IEnumerable<BigInteger> GetCoprimes()
@@ -39,7 +65,7 @@ namespace ThinqCore
 			yield break;
 		}
 
-		public IEnumerable<BigInteger> GetPrimeFactors(int Count=2)
+		public IEnumerable<BigInteger> GetPrimeFactors(int Count = 2)
 		{
 			if (Max < 2 || Min < 1 || Max <= Min || Target < 1) { yield break; }
 
@@ -53,14 +79,14 @@ namespace ThinqCore
 			List<BigInteger> factors = new List<BigInteger>();
 
 			while (counter < Max)
-			{				
+			{
 				if (factors.Count > 0)
 				{
 					if ((Count - factors.Count) == 1)
 					{
 						BigInteger product = factors.Aggregate(BigInteger.Multiply);
 						BigInteger remainder = new BigInteger();
-							
+
 						BigInteger quotient = BigInteger.DivRem(Target, product, out remainder);
 
 						if (remainder == 0)
@@ -77,7 +103,7 @@ namespace ThinqCore
 
 					if (factors.Any(f => !IsCoprime(f, counter)))
 					{
-						counter+=2;
+						counter += 2;
 						continue;
 					}
 				}
@@ -87,7 +113,7 @@ namespace ThinqCore
 					factors.Add(counter);
 					yield return counter;
 				}
-				counter+=2;
+				counter += 2;
 			}
 			yield break;
 		}

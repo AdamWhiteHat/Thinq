@@ -80,7 +80,7 @@ namespace ThinqUnitTests
 			Assert.AreEqual(expectedFirst, resultCoprimes.First());
 			Assert.AreEqual(expectedLast, resultCoprimes.Last());
 		}
-
+		
 		[TestMethod]
 		public void TestCoPrimes251()
 		{
@@ -99,6 +99,46 @@ namespace ThinqUnitTests
 			Assert.AreEqual(expectedFirst, resultCoprimes.First());
 			Assert.AreEqual(expectedLast, resultCoprimes.Last());
 		}
+		
+		[TestMethod]
+		public void TestCoPrimesLarge10Pow10Synchronous()
+		{
+			BigInteger coprimeTo = 2147483642;
+			BigInteger coprimeMin = 2145483643;
+			BigInteger coprimeMax = 2147483643;
+			int expectedCoprimeCount = 956522;
+			BigInteger expectedFirst = 2145483643;
+			BigInteger expectedLast = 2147483641;
+
+			Coprimes coprimes = new Coprimes(coprimeTo, coprimeMin, coprimeMax);
+			List<BigInteger> resultCoprimes = coprimes.GetCoprimes().ToList();
+			int resultCoprimeCount = resultCoprimes.Count;
+
+			Assert.AreEqual(expectedCoprimeCount, resultCoprimeCount);
+			Assert.AreEqual(expectedFirst, resultCoprimes.First());
+			Assert.AreEqual(expectedLast, resultCoprimes.Last());
+		}
+
+		[TestMethod]
+		public void TestCoPrimesLarge10Pow10Parallel()
+		{
+			BigInteger coprimeTo = 2147483642;
+			BigInteger coprimeMin = 2145483643;
+			BigInteger coprimeMax = 2147483643;
+			int expectedCoprimeCount = 956522;
+			BigInteger expectedFirst = 2145483643;
+			BigInteger expectedLast = 2147483641;
+
+			Coprimes coprimes = new Coprimes(coprimeTo, coprimeMin, coprimeMax);
+			IOrderedEnumerable<BigInteger> orderedResultCoprimes = coprimes.GetCoprimesParallel().OrderBy(bi => (BigInteger)bi);
+
+			int resultCoprimeCount = orderedResultCoprimes.Count();
+
+			Assert.AreEqual(expectedCoprimeCount, resultCoprimeCount);
+			Assert.AreEqual(expectedFirst, orderedResultCoprimes.First());
+			Assert.AreEqual(expectedLast, orderedResultCoprimes.Last());
+		}
+
 
 		[TestMethod]
 		public void TestCoPrimesEmpty()
@@ -140,7 +180,7 @@ namespace ThinqUnitTests
 			BigInteger coprimeTo = 1202664026348236889;
 			BigInteger coprimeMin = 1069760585;
 			BigInteger coprimeMax = 1202664026348236890;
-			int expectedCoprimeCount = 2;								
+			int expectedCoprimeCount = 2;
 			BigInteger primeP = 1074936217;
 			BigInteger primeQ = 1118823617;
 
