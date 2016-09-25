@@ -43,11 +43,11 @@
 			this.menuDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.tbCoPrimeMax = new System.Windows.Forms.TextBox();
 			this.groupCoprime = new System.Windows.Forms.GroupBox();
+			this.label6 = new System.Windows.Forms.Label();
 			this.btnEnumeratePrimeFactors = new System.Windows.Forms.Button();
 			this.btnEnumerateGCD = new System.Windows.Forms.Button();
 			this.btnEnumerateLCM = new System.Windows.Forms.Button();
 			this.groupFactors = new System.Windows.Forms.GroupBox();
-			this.label6 = new System.Windows.Forms.Label();
 			this.btnCancelEnumerateCoFactors = new System.Windows.Forms.Button();
 			this.tbResultMaxQuantity = new System.Windows.Forms.TextBox();
 			this.btnEnumerateCoFactors = new System.Windows.Forms.Button();
@@ -185,6 +185,16 @@
 			this.groupCoprime.TabStop = false;
 			this.groupCoprime.Text = "Co-Prime";
 			// 
+			// label6
+			// 
+			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.label6.Location = new System.Drawing.Point(433, 14);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(31, 46);
+			this.label6.TabIndex = 31;
+			this.label6.Text = "min/ max";
+			this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
 			// btnEnumeratePrimeFactors
 			// 
 			this.btnEnumeratePrimeFactors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -243,16 +253,6 @@
 			this.groupFactors.TabIndex = 26;
 			this.groupFactors.TabStop = false;
 			this.groupFactors.Text = "Common Factors";
-			// 
-			// label6
-			// 
-			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.label6.Location = new System.Drawing.Point(433, 14);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(31, 46);
-			this.label6.TabIndex = 31;
-			this.label6.Text = "min/ max";
-			this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// btnCancelEnumerateCoFactors
 			// 
@@ -394,6 +394,7 @@
 			this.btnAddCofactor.TabIndex = 34;
 			this.btnAddCofactor.Text = "<-- Add";
 			this.btnAddCofactor.UseVisualStyleBackColor = true;
+			this.btnAddCofactor.Click += new System.EventHandler(this.btnAddCoFactor_Click);
 			// 
 			// label1
 			// 
@@ -423,6 +424,7 @@
 			this.tbCoFactorAdd.Size = new System.Drawing.Size(60, 20);
 			this.tbCoFactorAdd.TabIndex = 33;
 			this.tbCoFactorAdd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.tbCoFactorAdd.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbCoFactorAdd_KeyUp);
 			// 
 			// MainForm
 			// 

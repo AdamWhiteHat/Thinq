@@ -14,6 +14,7 @@ namespace ThinqGUI
 
 		public static string RemoveNonDigits(string input)
 		{
+			if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 			return new string(input.Where(c => NumericCharacters.Contains(c)).ToArray());
 		}
 	}
@@ -22,6 +23,7 @@ namespace ThinqGUI
 	{
 		public static BigInteger ToBigInteger(this TextBox thisTextBox)
 		{
+			if (thisTextBox == null || string.IsNullOrWhiteSpace(thisTextBox.Text)) return BigInteger.Zero;
 			return BigInteger.Parse(TryParse.RemoveNonDigits(thisTextBox.Text));
 		}
 	}
