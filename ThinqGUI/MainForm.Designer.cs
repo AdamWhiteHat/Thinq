@@ -1,37 +1,37 @@
 ﻿namespace ThinqGUI
 {
-	partial class MainForm
-	{
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+    partial class MainForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && (components != null))
-			{
-				if (backgroundTask != null)
-				{
-					backgroundTask.Dispose();
-				}
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                if (backgroundTask != null)
+                {
+                    backgroundTask.Dispose();
+                }
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
 			this.components = new System.ComponentModel.Container();
 			this.tbOutput = new System.Windows.Forms.TextBox();
 			this.panelOutput = new System.Windows.Forms.Panel();
@@ -284,6 +284,7 @@
 			this.btnEnumerateCoFactors.TabIndex = 45;
 			this.btnEnumerateCoFactors.Text = "Enumerate";
 			this.btnEnumerateCoFactors.UseVisualStyleBackColor = true;
+			this.btnEnumerateCoFactors.Click += new System.EventHandler(this.btnEnumerateCoFactors_Click);
 			// 
 			// label11
 			// 
@@ -447,40 +448,40 @@
 			this.groupFactors.PerformLayout();
 			this.ResumeLayout(false);
 
-		}
+        }
 
-		#endregion
+        #endregion
 
-		private System.Windows.Forms.Panel panelOutput;
-		private System.Windows.Forms.TextBox tbCoPrimeTo;
-		private System.Windows.Forms.TextBox tbCoPrimeMin;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.Button btnEnumerateCoprimes;
-		private System.Windows.Forms.TextBox tbCoPrimeMax;
-		private System.Windows.Forms.ContextMenuStrip contextMenuCoFactors;
-		private System.Windows.Forms.ToolStripMenuItem menuDelete;
-		private System.Windows.Forms.GroupBox groupCoprime;
-		private System.Windows.Forms.GroupBox groupFactors;
-		private System.Windows.Forms.Button btnEnumerateGCD;
-		private System.Windows.Forms.Button btnEnumerateLCM;
-		public System.Windows.Forms.TextBox tbOutput;
-		private System.Windows.Forms.Button btnEnumeratePrimeFactors;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.Button btnCancelEnumerateCoFactors;
-		private System.Windows.Forms.TextBox tbResultMaxQuantity;
-		private System.Windows.Forms.Button btnEnumerateCoFactors;
-		private System.Windows.Forms.Label label11;
-		private System.Windows.Forms.TextBox tbResultMinValue;
-		private System.Windows.Forms.Label label10;
-		private System.Windows.Forms.ListBox listCoFactors;
-		private System.Windows.Forms.Label label8;
-		private System.Windows.Forms.TextBox tbResultMaxValue;
-		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.Button btnAddCofactor;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.TextBox tbCoFactorAdd;
-	}
+        private System.Windows.Forms.Panel panelOutput;
+        private System.Windows.Forms.TextBox tbCoPrimeTo;
+        private System.Windows.Forms.TextBox tbCoPrimeMin;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnEnumerateCoprimes;
+        private System.Windows.Forms.TextBox tbCoPrimeMax;
+        private System.Windows.Forms.ContextMenuStrip contextMenuCoFactors;
+        private System.Windows.Forms.ToolStripMenuItem menuDelete;
+        private System.Windows.Forms.GroupBox groupCoprime;
+        private System.Windows.Forms.GroupBox groupFactors;
+        private System.Windows.Forms.Button btnEnumerateGCD;
+        private System.Windows.Forms.Button btnEnumerateLCM;
+        public System.Windows.Forms.TextBox tbOutput;
+        private System.Windows.Forms.Button btnEnumeratePrimeFactors;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button btnCancelEnumerateCoFactors;
+        private System.Windows.Forms.TextBox tbResultMaxQuantity;
+        private System.Windows.Forms.Button btnEnumerateCoFactors;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox tbResultMinValue;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.ListBox listCoFactors;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox tbResultMaxValue;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button btnAddCofactor;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox tbCoFactorAdd;
+    }
 }
 
