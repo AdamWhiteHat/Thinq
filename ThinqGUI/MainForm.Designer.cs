@@ -338,6 +338,7 @@
 			this.listCoFactors.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
 			this.listCoFactors.Size = new System.Drawing.Size(60, 82);
 			this.listCoFactors.TabIndex = 32;
+			this.listCoFactors.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listCoFactors_KeyUp);
 			// 
 			// label8
 			// 
