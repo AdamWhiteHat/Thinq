@@ -1,6 +1,6 @@
 # Thinq = Linq + Mathmatics
 
-![Screenshot](https://github.com/AdamRakaska/Thinq/blob/master/Thinq.PNG)
+![Screenshot](https://github.com/AdamWhiteHat/Thinq/blob/master/Thinq.PNG)
 
 
 Currently supports:
