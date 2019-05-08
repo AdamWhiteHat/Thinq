@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ThinqGUI")]
 [assembly: AssemblyDescription("GUI application")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("csharpprogramming.tips")]
+[assembly: AssemblyCompany("https://csharpcodewhisperer.blogspot.com")]
 [assembly: AssemblyProduct("ThinqGUI")]
-[assembly: AssemblyCopyright("Copyright © Adam Rakaska 2015")]
+[assembly: AssemblyCopyright("Copyright © Adam White 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

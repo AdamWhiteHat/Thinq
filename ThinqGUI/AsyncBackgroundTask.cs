@@ -33,7 +33,7 @@ namespace ThinqGUI
 		/// Gets a value indicating whether the AsyncBackgroundTask class supports cancellation of a background operation. This value always returns true.
 		/// </summary>
 		public bool WorkerSupportsCancellation { get { return true; } }
-		
+
 		/// <summary>
 		/// Occurs when AsyncBackgroundTask.RunWorkerAsync() is called.
 		/// </summary>		
@@ -48,8 +48,8 @@ namespace ThinqGUI
 		/// </summary>
 		public event RunWorkerCompletedEventHandler RunWorkerCompleted
 		{
-			add {  if (!IsDisposed) { _backgroundWorker.RunWorkerCompleted += value; } }
-			remove {  if (!IsDisposed) { _backgroundWorker.RunWorkerCompleted -= value; } }
+			add { if (!IsDisposed) { _backgroundWorker.RunWorkerCompleted += value; } }
+			remove { if (!IsDisposed) { _backgroundWorker.RunWorkerCompleted -= value; } }
 		}
 
 		#endregion
@@ -59,6 +59,11 @@ namespace ThinqGUI
 		private Stats _operationStats = null;
 		private Intersection _intersectionSet = null;
 		private BackgroundWorker _backgroundWorker = null;
+
+		private BigInteger minValue;
+		private BigInteger maxValue;
+		private BigInteger maxQuantity;
+		private BigInteger[] cofactors;
 
 		private class Stats
 		{
@@ -83,7 +88,11 @@ namespace ThinqGUI
 
 			IsBusy = false;
 			IsDisposed = false;
-			CancellationPending = false;			
+			CancellationPending = false;
+			minValue = Program.ThinqMainForm.ResultMinValue;
+			maxValue = Program.ThinqMainForm.ResultMaxValue;
+			maxQuantity = Program.ThinqMainForm.ResultMaxQuantity;
+			cofactors = Program.ThinqMainForm.CoFactors.ToArray();
 		}
 
 		#endregion
@@ -176,27 +185,29 @@ namespace ThinqGUI
 			}
 			IsBusy = false;
 		}
-		
+
 		private void CalculateIntersectionSet()
 		{
 			if (!IsDisposed && !CancellationPending && _intersectionSet == null)
 			{
+				_intersectionSet = new Intersection(minValue, maxValue, cofactors, maxQuantity);
+				DisplayResults("MultiplesOf", _intersectionSet.GetEnumerable());
+			}
+		}
+
+		private void DisplayResults(string name, IEnumerable<BigInteger> results)
+		{
+			if (!IsDisposed && !CancellationPending && results != null && results.Count() > 0)
+			{
 				DateTime startTime = DateTime.Now;
-				BigInteger minValue = Program.ThinqMainForm.ResultMinValue;
-				BigInteger maxValue = Program.ThinqMainForm.ResultMaxValue;
-				BigInteger maxQuantity = Program.ThinqMainForm.ResultMaxQuantity;
 				int padLen = maxValue.ToString().Length;
-				BigInteger[] cofactors = Program.ThinqMainForm.CoFactors.ToArray();
 
-				//Program.DisplayFunction(string.Format("Max: {0:n0}", maxValue));	
-				Program.DisplayFunction(string.Format("LCM[{0}]", string.Join(",", cofactors)));
+				Program.DisplayFunction(string.Format("{0}[{1}]", name, string.Join(",", cofactors)));
 				Program.DisplayFunction("----");
-
 				try
 				{
 					_operationStats.Counter = 0;
-					_intersectionSet = new Intersection(minValue, maxValue, cofactors, maxQuantity);
-					foreach (BigInteger factor in _intersectionSet.GetEnumerable())
+					foreach (BigInteger factor in results)
 					{
 						_operationStats.Counter++;
 						Program.DisplayFunction(string.Concat("{0,", padLen.ToString(), "}"), factor);
@@ -212,8 +223,9 @@ namespace ThinqGUI
 					_operationStats.ProcessingTime = DateTime.Now.Subtract(startTime);
 
 					StringBuilder strBldr = new StringBuilder();
-					strBldr.AppendLine();				
-					strBldr.AppendFormat("Factors found: {0}", _operationStats.Counter).AppendLine();
+					strBldr.AppendLine();
+					strBldr.AppendFormat("Count: {0}", _operationStats.Counter);
+					strBldr.AppendLine();
 					strBldr.AppendFormat("Time elapsed: {0}", _operationStats.ProcessingTime.ToString(@"mm\:ss\.ff"));
 
 					Program.DisplayFunction(strBldr.ToString());

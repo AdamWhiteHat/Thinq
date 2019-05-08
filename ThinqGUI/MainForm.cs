@@ -21,7 +21,6 @@ namespace ThinqGUI
 		public void SetControlsStatus(bool IsEnabled)
 		{
 			groupCoprime.Enabled = IsEnabled;
-			panelFactors.Enabled = IsEnabled;
 			btnEnumerateCoFactors.Enabled = IsEnabled;
 			if (IsEnabled)
 			{
@@ -284,6 +283,5 @@ namespace ThinqGUI
 		}
 
 		#endregion
-
 	}
 }

@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinqCore", "ThinqCore\ThinqCore.csproj", "{47BC0089-0618-4C41-BC73-0EAE8D564E35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinqCore", "Thinq\ThinqCore\ThinqCore.csproj", "{47BC0089-0618-4C41-BC73-0EAE8D564E35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinqGUI", "..\ThinqGUI\ThinqGUI.csproj", "{3D4FB5FE-6187-481B-AB1A-482CE9709050}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinqGUI", "ThinqGUI\ThinqGUI.csproj", "{3D4FB5FE-6187-481B-AB1A-482CE9709050}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinqUnitTests", "ThinqUnitTests\ThinqUnitTests.csproj", "{6DD043DF-48F3-47F2-9D9B-7576D200FD42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinqUnitTests", "Thinq\ThinqUnitTests\ThinqUnitTests.csproj", "{6DD043DF-48F3-47F2-9D9B-7576D200FD42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
