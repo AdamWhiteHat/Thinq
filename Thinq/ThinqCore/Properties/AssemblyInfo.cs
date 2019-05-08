@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ThinqCore")]
 [assembly: AssemblyDescription("Use/Distribute/Modify with attribution")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("csharpprogramming.tips")]
+[assembly: AssemblyCompany("https://csharpcodewhisperer.blogspot.com")]
 [assembly: AssemblyProduct("ThinqCore")]
-[assembly: AssemblyCopyright("Adam Rakaska 2016 - Use/Distribute/Modify with attribution")]
+[assembly: AssemblyCopyright("Adam White 2016 - Use/Distribute/Modify with attribution")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
